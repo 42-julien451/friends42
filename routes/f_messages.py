@@ -19,9 +19,6 @@ def send_msg(author, dest, msg, db, ano=False):
 	notifs = db.has_notifications(dest['id'])
 	if notifs and notifs['enabled'] == 1:
 		sender = "de " + author['login']
-		if 'anonymous' in request.form:
-			sender = 'Anonyme'
-		send_raw_tg_dm(notifs['telegram_id'], f"📬 Nouveau message {sender} : {msg}")
 
 
 @app.route('/messages/')

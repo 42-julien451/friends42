@@ -132,32 +132,6 @@ def standard_cluster(pos):
 		pos = pos.replace('B', '')
 	return pos
 
-
-def send_tg_dm(tg: dict, who: str, place: str):
-	msg = tg['message'] or "🧑‍💻 |id| s'est connecté en |dump|"
-	msg = msg.replace('|id|', who)
-	msg = msg.replace('|dump|', place)
-	send_raw_tg_dm(tg['telegram_id'], msg)
-
-
-def send_raw_tg_dm(tg_id: int, msg: str):
-	if len(msg) > 500:
-		msg = msg[:500] + '...'
-	try:
-		token = config.telegram_token
-		if not token:
-			return print('Missing tg token')
-		req = requests.post(f'https://api.telegram.org/bot{token}/sendMessage',
-		                    {
-			                    'chat_id': tg_id,
-			                    'text': msg,
-		                    })
-		if req.status_code != 200:
-			print('[Telegram] Request failed: ', req.status_code, req.text)
-	except requests.exceptions.RequestException as e:
-		print("[Telegram] Request failed ", e)
-
-
 def create_users(db, profiles):
 	for elem in profiles:
 		campus = find_correct_campus(elem)
@@ -167,8 +141,6 @@ def create_users(db, profiles):
 			old_location = r.get('PERM>' + str(elem["user"]["login"]))
 			if not old_location or old_location.decode("utf-8") != elem['user']['location']:
 				notif_friends = db.get_notifications_friends(elem['user']['id'])
-				for friend in notif_friends:
-					send_tg_dm(friend['tg'], elem['user']['login'], elem['user']['location'])
 			r.set('USER>' + str(elem["user"]["id"]), elem['user']["location"], ex=200)
 			r.set('USER>' + str(elem["user"]["login"]), elem['user']["location"], ex=200)
 			r.set('PERM>' + str(elem["user"]["login"]), elem['user']["location"])
