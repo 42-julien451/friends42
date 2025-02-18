@@ -61,10 +61,6 @@
 					        data-category="questions">
 						<i class="fa-solid fa-question-circle"></i> Questions
 					</button>
-					<button type="button" class="list-group-item settings-switcher list-group-item-action"
-					        data-category="changelog">
-						<i class="fa-solid fa-newspaper"></i> Changelog
-					</button>
 				</ul>
 			</div>
 			<div class="col-md-9">
@@ -242,9 +238,6 @@
 							<button class="btn btn-secondary" onclick="kiosk_open();">Accéder au mode Kiosk</button>
 						</div>
 					</div>
-				</div>
-				<div hidden id="changelog">
-					{% include 'changelog.html' %}
 				</div>
 				<div hidden id="questions">
 					{% include 'questions.html' %}
