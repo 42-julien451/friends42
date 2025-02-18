@@ -7,16 +7,16 @@ services:
       - redis_host=redis
     volumes:
       - ./database.db:/app/database.db
-#    labels:
-#      traefik.enable: 'true'
-#      traefik.docker.network: 'traefik'
-#      traefik.http.services.friends42.loadbalancer.server.port: '8080'
-#      traefik.http.routers.friends42.entrypoints: 'https'
-#      traefik.http.routers.friends42.rule: 'Host(`hostname`)'
-#      traefik.http.routers.friends42.tls: 'true'
-#    networks:
-#      - default
-#      - traefik
+    labels:
+      traefik.enable: 'true'
+      traefik.docker.network: 'traefik'
+      traefik.http.services.friends42.loadbalancer.server.port: '8080'
+      traefik.http.routers.friends42.entrypoints: 'https'
+      traefik.http.routers.friends42.rule: 'Host(`friends.docker.int.42paris.fr`)'
+      traefik.http.routers.friends42.tls: 'true'
+    networks:
+      - default
+      - traefik
 
   redis:
     image: "redis:alpine"
@@ -27,7 +27,7 @@ services:
       dockerfile: ./updater.Dockerfile
     hostname: updater
 
-#networks:
-#  default:
-#  traefik:
-#    external: true
+networks:
+  default:
+  traefik:
+    external: true
