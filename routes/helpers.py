@@ -178,8 +178,8 @@ def optimize_locations(data: list[dict]) -> list[dict]:
 	compressed = []
 	for user in data:
 		tmp = user['user']
-		user['host'] = user['host'].replace('made-f0b', 'made-f0B')
-		user['host'] = user['host'].replace('made-f0c', 'made-f0C')
+#		user['host'] = user['host'].replace('made-f0b', 'made-f0B')
+#		user['host'] = user['host'].replace('made-f0c', 'made-f0C')
 		compressed.append({
 			"id": user['id'],
 			"host": user['host'],
