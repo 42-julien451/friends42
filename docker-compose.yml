@@ -1,5 +1,6 @@
 services:
   app:
+    restart: unless-stopped
     build:
       dockerfile: ./app.Dockerfile
     hostname: friends42
@@ -19,10 +20,12 @@ services:
       - traefik
 
   redis:
+    restart: unless-stopped
     image: "redis:alpine"
     hostname: redis
 
   updater:
+    restart: unless-stopped
     build:
       dockerfile: ./updater.Dockerfile
     hostname: updater
