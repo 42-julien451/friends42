@@ -1,4 +1,3 @@
-
 def exrypz(computer):
 	# old format
 	if len(computer) >= 6 and 'r' in computer and 's' in computer:
