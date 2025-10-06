@@ -1,166 +1,112 @@
+
 def exrypz(computer):
-	# new format
-	if '-' in computer and len(computer) >= 8:
-		floor = computer.split('r')[0]
-		row = computer.split('r')[1].split('s')[0]
-		# fix for invalid seat
-		if 's' not in computer:
-			return {"building": computer.split('-')[0], "p_sep": "s", "etage": floor, "range": row, "place": "1"}
-		seat = computer.split('s')[1]
-		res = {"building": computer.split('-')[0], "p_sep": "s", "etage": floor, "range": row,
-		       "place": seat}
-		return res
 	# old format
-	if len(computer) >= 6 and 'r' in computer and 'p' in computer:
-		res = {"building": "main", "p_sep": "p", "etage": computer.split('r')[0],
-		       "range": computer.split('r')[1].split('p')[0],
-		       "place": computer.split('p')[1]}
+	if len(computer) >= 6 and 'r' in computer and 's' in computer:
+		res = {"building": "main", "s_sep": "s", "etage": computer.split('r')[0],
+		       "range": computer.split('r')[1].split('s')[0],
+		       "place": computer.split('s')[1]}
 		return res
 	return False
 
 
 # @formatter:off
 map = {
-	"bess-f1": [
-		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['bess-f1r6s6', 'bess-f1r6s5', 'bess-f1r6s4', 'bess-f1r6s3', 'bess-f1r6s2', 'bess-f1r6s1', '', '', '', '', '', '', '', '', '', ''],
-		['bess-f1r5s13', 'bess-f1r5s12', 'bess-f1r5s11', 'bess-f1r5s10', 'bess-f1r5s9', 'bess-f1r5s8', '', 'bess-f1r5s7', 'bess-f1r5s6', 'bess-f1r5s5', 'bess-f1r5s4', 'bess-f1r5s3', 'bess-f1r5s2', 'bess-f1r5s1', '', 'd'],
-		['bess-f1r4s13', 'bess-f1r4s12', 'bess-f1r4s11', 'bess-f1r4s10', 'bess-f1r4s9', 'bess-f1r4s8', '', '', 'bess-f1r4s7', 'bess-f1r4s6', 'bess-f1r4s5', 'bess-f1r4s4', 'bess-f1r4s3', 'bess-f1r4s2', 'bess-f1r4s1', ''],
-		['bess-f1r3s14', 'bess-f1r3s13', 'bess-f1r3s12', 'bess-f1r3s11', 'bess-f1r3s10', 'bess-f1r3s9', '', 'bess-f1r3s8', 'bess-f1r3s7', 'bess-f1r3s6', 'bess-f1r3s5', 'bess-f1r3s4', 'bess-f1r3s3', 'bess-f1r3s2', 'bess-f1r3s1', ''],
-		['bess-f1r2s12', 'bess-f1r2s11', 'bess-f1r2s10', 'bess-f1r2s9', 'bess-f1r2s8', 'bess-f1r2s7', '', '', 'bess-f1r2s6', 'bess-f1r2s5', 'bess-f1r2s4', 'bess-f1r2s3', 'bess-f1r2s2', 'bess-f1r2s1', '', 'd'],
-		['bess-f1r1s14', 'bess-f1r1s13', 'bess-f1r1s12', 'bess-f1r1s11', 'bess-f1r1s10', 'bess-f1r1s9', '', 'bess-f1r1s8', 'bess-f1r1s7', 'bess-f1r1s6', 'bess-f1r1s5', 'bess-f1r1s4', 'bess-f1r1s3', 'bess-f1r1s2', 'bess-f1r1s1', '']
+	"f0": [['R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+			['f0r13s1', 'f0r13s2', 'f0r13s3', 'f0r13s4', 'f0r13s5', 'f0r13s6', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+			['f0r12s1', 'f0r12s2', 'f0r12s3', 'f0r12s4', 'f0r12s5', 'f0r12s6', 'f0r12s7', '', 'f0r12s8', 'f0r12s9', 'f0r12s10', 'f0r12s11', 'f0r12s12', 'f0r12s13', 'f0r12s14', 'f0r12s15', 'f0r12s16', '', 'f0r12s17', 'f0r12s18', 'f0r12s19', 'f0r12s20', 'f0r12s21', 'f0r12s22', 'f0r12s23'],
+			['f0r11s1', 'f0r11s2', 'f0r11s3', 'f0r11s4', 'f0r11s5', 'f0r11s6', 'f0r11s7', '', 'f0r11s8', 'f0r11s9', 'f0r11s10', 'f0r11s11', 'f0r11s12', 'f0r11s13', 'f0r11s14', 'f0r11s15', 'f0r11s16', '', 'f0r11s17', 'f0r11s18', 'f0r11s19', 'f0r11s20', 'f0r11s21', 'f0r11s22', 'f0r11s23'],
+			['f0r10s1', 'f0r10s2', 'f0r10s3', 'f0r10s4', 'f0r10s5', 'f0r10s6', 'f0r10s7', '', 'f0r10s8', 'f0r10s9', 'f0r10s10', 'f0r10s11', 'f0r10s12', 'f0r10s13', 'f0r10s14', 'f0r10s15', 'f0r10s16', '', 'f0r10s17', 'f0r10s18', 'f0r10s19', 'f0r10s20', 'f0r10s21', 'f0r10s22', 'f0r10s23'],
+			['f0r9s1', 'f0r9s2', 'f0r9s3', 'f0r9s4', 'f0r9s5', 'f0r9s6', 'f0r9s7', '', '', 'f0r9s8', 'f0r9s9', 'f0r9s10', 'f0r9s11', 'f0r9s12', 'f0r9s13', 'f0r9s14', '', '', 'f0r9s15', 'f0r9s16', 'f0r9s17', 'f0r9s18', 'f0r9s19', 'f0r9s20', 'f0r9s21'],
+			['f0r8s1', 'f0r8s2', 'f0r8s3', 'f0r8s4', 'f0r8s5', 'f0r8s6', '', '', 'f0r8s7', 'f0r8s8', 'f0r8s9', 'f0r8s10', 'f0r8s11', 'f0r8s12', 'f0r8s13', 'f0r8s14', '', '', 'f0r8s16', 'f0r8s17', 'f0r8s18', 'f0r8s19', 'f0r8s20', 'f0r8s21', 'f0r8s22'],
+			['f0r7s1', 'f0r7s2', 'f0r7s3', 'f0r7s4', 'f0r7s5', 'f0r7s6', 'f0r7s7', '', 'f0r7s8', 'f0r7s9', 'f0r7s10', 'f0r7s11', 'f0r7s12', 'f0r7s13', 'f0r7s14', 'f0r7s15', 'f0r7s16', '', 'f0r7s17', 'f0r7s18', 'f0r7s19', 'f0r7s20', 'f0r7s21', 'f0r7s22', 'f0r7s23'],
+			['f0r6s1', 'f0r6s2', 'f0r6s3', 'f0r6s4', 'f0r6s5', 'f0r6s6', 'f0r6s7', '', '', '', 'f0r6s8', 'f0r6s9', 'f0r6s10', 'f0r6s11', 'f0r6s12', 'f0r6s13', 'f0r6s14', '', '', 'f0r6s15', 'f0r6s16', 'f0r6s17', 'f0r6s18', 'f0r6s19', 'f0r6s20'],
+			['f0r5s1', 'f0r5s2', 'f0r5s3', 'f0r5s4', 'f0r5s5', 'f0r5s6', 'f0r5s7', '', 'f0r5s8', 'f0r5s9', 'f0r5s10', 'f0r5s11', 'f0r5s12', 'f0r5s13', 'f0r5s14', 'f0r5s15', 'f0r5s16', '', '', 'f0r5s17', 'f0r5s18', 'f0r5s19', 'f0r5s20', 'f0r5s21', 'f0r5s22'],
+			['f0r4s1', 'f0r4s2', 'f0r4s3', 'f0r4s4', 'f0r4s5', 'f0r4s6', 'f0r4s7', '', 'f0r4s8', 'f0r4s9', 'f0r4s10', 'f0r4s11', 'f0r4s12', 'f0r4s13', 'f0r4s14', 'f0r4s15', 'f0r4s16', '', 'f0r4s17', 'f0r4s18', 'f0r4s19', 'f0r4s20', 'f0r4s21', 'f0r4s22', 'f0r4s23'],
+			['f0r3s1', 'f0r3s2', 'f0r3s3', 'f0r3s4', 'f0r3s5', 'f0r3s6', 'f0r3s7', '', '', 'f0r3s8', 'f0r3s9', 'f0r3s10', 'f0r3s11', 'f0r3s12', 'f0r3s13', 'f0r3s14', '', '', 'f0r3s15', 'f0r3s16', 'f0r3s17', 'f0r3s18', 'f0r3s19', 'f0r3s20', 'f0r3s21'],
+			['f0r2s1', 'f0r2s2', 'f0r2s3', 'f0r2s4', 'f0r2s5', 'f0r2s6', 'f0r2s7', '', 'f0r2s8', 'f0r2s9', 'f0r2s10', 'f0r2s11', 'f0r2s12', 'f0r2s13', 'f0r2s14', 'f0r2s15', 'f0r2s16', '', 'f0r2s17', 'f0r2s18', 'f0r2s19', 'f0r2s20', 'f0r2s21', 'f0r2s22', 'f0r2s23'],
+			['f0r1s1', 'f0r1s2', 'f0r1s3', 'f0r1s4', 'f0r1s5', 'f0r1s6', 'f0r1s7', '', '', '', '', '', '', '', '', '', '', '', 'f0r1s8', 'f0r1s9', 'f0r1s10', 'f0r1s11', 'f0r1s12', 'f0r1s13', 'f0r1s14']
 	],
-	"bess-f2": [
-		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['', 'bess-f2r6s6', 'bess-f2r6s5', 'bess-f2r6s4', 'bess-f2r6s3', 'bess-f2r6s2', 'bess-f2r6s1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-		['', 'bess-f2r5s16', 'bess-f2r5s15', 'bess-f2r5s14', 'bess-f2r5s13', 'bess-f2r5s12', 'bess-f2r5s11', '', 'bess-f2r5s10', 'bess-f2r5s9', 'bess-f2r5s8', 'bess-f2r5s7', 'bess-f2r5s6', 'bess-f2r5s5', 'bess-f2r5s4', '', '', 'bess-f2r5s3', 'bess-f2r5s2', 'bess-f2r5s1', '', '', '', 'd'],
-		['', 'bess-f2r4s19', 'bess-f2r4s18', 'bess-f2r4s17', 'bess-f2r4s16', 'bess-f2r4s15', 'bess-f2r4s14', '', '', 'bess-f2r4s13', 'bess-f2r4s12', 'bess-f2r4s11', 'bess-f2r4s10', 'bess-f2r4s9', 'bess-f2r4s8', 'bess-f2r4s7', '', 'bess-f2r4s6', 'bess-f2r4s5', 'bess-f2r4s4', 'bess-f2r4s3', 'bess-f2r4s2', 'bess-f2r4s1', ''],
-		['', 'bess-f2r3s20', 'bess-f2r3s19', 'bess-f2r3s18', 'bess-f2r3s17', 'bess-f2r3s16', 'bess-f2r3s15', '', 'bess-f2r3s14', 'bess-f2r3s13', 'bess-f2r3s12', 'bess-f2r3s11', 'bess-f2r3s10', 'bess-f2r3s9', 'bess-f2r3s8', 'bess-f2r3s7', '', 'bess-f2r3s6', 'bess-f2r3s5', 'bess-f2r3s4', 'bess-f2r3s3', 'bess-f2r3s2', 'bess-f2r3s1', ''],
-		['', 'bess-f2r2s18', 'bess-f2r2s17', 'bess-f2r2s16', 'bess-f2r2s15', 'bess-f2r2s14', 'bess-f2r2s13', '',  'bess-f2r2s12', 'bess-f2r2s11', 'bess-f2r2s10', 'bess-f2r2s9', 'bess-f2r2s8', 'bess-f2r2s7', '', '', '', 'bess-f2r2s6', 'bess-f2r2s5', 'bess-f2r2s4', 'bess-f2r2s3', 'bess-f2r2s2', 'bess-f2r2s1', 'd'],
-		['bess-f2r1s21', 'bess-f2r1s20', 'bess-f2r1s19', 'bess-f2r1s18', 'bess-f2r1s17', 'bess-f2r1s16', 'bess-f2r1s15', '', 'bess-f2r1s14', 'bess-f2r1s13', 'bess-f2r1s12', 'bess-f2r1s11', 'bess-f2r1s10', 'bess-f2r1s9', 'bess-f2r1s8', 'bess-f2r1s7', '', 'bess-f2r1s6', 'bess-f2r1s5', 'bess-f2r1s4', 'bess-f2r1s3', 'bess-f2r1s2', 'bess-f2r1s1', ''],
-	],
-	"bess-f3": [
-		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['bess-f3r6s7', 'bess-f3r6s6', 'bess-f3r6s5', 'bess-f3r6s4', 'bess-f3r6s3', 'bess-f3r6s2', 'bess-f3r6s1', '', '', '', '', '', '', '', '', '', ''],
-		['', 'bess-f3r5s13', 'bess-f3r5s12', 'bess-f3r5s11', 'bess-f3r5s10', 'bess-f3r5s9', 'bess-f3r5s8', '', 'bess-f3r5s7', 'bess-f3r5s6', 'bess-f3r5s5', 'bess-f3r5s4', 'bess-f3r5s3', 'bess-f3r5s2', 'bess-f3r5s1', '', 'd'],
-		['', 'bess-f3r4s13', 'bess-f3r4s12', 'bess-f3r4s11', 'bess-f3r4s10', 'bess-f3r4s9', 'bess-f3r4s8', '', '', 'bess-f3r4s7', 'bess-f3r4s6', 'bess-f3r4s5', 'bess-f3r4s4', 'bess-f3r4s3', 'bess-f3r4s2', 'bess-f3r4s1', ''],
-		['', 'bess-f3r3s14', 'bess-f3r3s13', 'bess-f3r3s12', 'bess-f3r3s11', 'bess-f3r3s10', 'bess-f3r3s9', '', 'bess-f3r3s8', 'bess-f3r3s7', 'bess-f3r3s6', 'bess-f3r3s5', 'bess-f3r3s4', 'bess-f3r3s3', 'bess-f3r3s2', 'bess-f3r3s1', ''],
-		['', 'bess-f3r2s12', 'bess-f3r2s11', 'bess-f3r2s10', 'bess-f3r2s9', 'bess-f3r2s8', 'bess-f3r2s7', '', '', 'bess-f3r2s6', 'bess-f3r2s5', 'bess-f3r2s4', 'bess-f3r2s3', 'bess-f3r2s2', 'bess-f3r2s1', '', 'd'],
-		['bess-f3r1s15', 'bess-f3r1s14', 'bess-f3r1s13', 'bess-f3r1s12', 'bess-f3r1s11', 'bess-f3r1s10', 'bess-f3r1s9', '', 'bess-f3r1s8', 'bess-f3r1s7', 'bess-f3r1s6', 'bess-f3r1s5', 'bess-f3r1s4', 'bess-f3r1s3', 'bess-f3r1s2', 'bess-f3r1s1', '']
-	],
-	"bess-f4": [
-		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['', 'bess-f4r6s5', 'bess-f4r6s4', 'bess-f4r6s3', 'bess-f4r6s2', 'bess-f4r6s1', '', '', '', '', '', '', '', '', '', ''],
-		['bess-f4r5s11', 'bess-f4r5s10', 'bess-f4r5s9', 'bess-f4r5s8', 'bess-f4r5s7', 'bess-f4r5s6', '', 'bess-f4r5s5', 'bess-f4r5s4', 'bess-f4r5s3', 'bess-f4r5s2', 'bess-f4r5s1', '', '', '', 'd'],
-		['bess-f4r4s13', 'bess-f4r4s12', 'bess-f4r4s11', 'bess-f4r4s10', 'bess-f4r4s9', 'bess-f4r4s8', '', '', 'bess-f4r4s7', 'bess-f4r4s6', 'bess-f4r4s5', 'bess-f4r4s4', 'bess-f4r4s3', 'bess-f4r4s2', 'bess-f4r4s1', ''],
-		['bess-f4r3s14', 'bess-f4r3s13', 'bess-f4r3s12', 'bess-f4r3s11', 'bess-f4r3s10', 'bess-f4r3s9', '', 'bess-f4r3s8', 'bess-f4r3s7', 'bess-f4r3s6', 'bess-f4r3s5', 'bess-f4r3s4', 'bess-f4r3s3', 'bess-f4r3s2', 'bess-f4r3s1', ''],
-		['bess-f4r2s13', 'bess-f4r2s12', 'bess-f4r2s11', 'bess-f4r2s10', 'bess-f4r2s9', 'bess-f4r2s8', '', '', 'bess-f4r2s7', 'bess-f4r2s6', 'bess-f4r2s5', 'bess-f4r2s4', 'bess-f4r2s3', 'bess-f4r2s2', 'bess-f4r2s1', 'd'],
-		['bess-f4r1s14', 'bess-f4r1s13', 'bess-f4r1s12', 'bess-f4r1s11', 'bess-f4r1s10', 'bess-f4r1s9', '', 'bess-f4r1s8', 'bess-f4r1s7', 'bess-f4r1s6', 'bess-f4r1s5', 'bess-f4r1s4', 'bess-f4r1s3', 'bess-f4r1s2', 'bess-f4r1s1', '']
-	],
-	"paul-f3": [
-		['R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['', '', '', '', '', '', '', '', '', '', '', '', 'x', '', 'paul-f3Br10s1', 'paul-f3Br10s2', '', '', '', '', '', ''],
-		['', '', '', '', '', '', '', '', '', '', '', 'paul-f3Ar9s1', 'x', 'paul-f3Br9s1', 'paul-f3Br9s2', 'paul-f3Br9s3', '', '', '', '', '', 'paul-f3Br9s4'],
-		['', '', '', '', '', '', '', '', '', 'paul-f3Ar8s1', 'paul-f3Ar8s2', 'paul-f3Ar8s3', 'x', 'paul-f3Br8s1', 'paul-f3Br8s2', 'paul-f3Br8s3', '', '', '', '', '', ''],
-		['', '', '', '', '', '', 'paul-f3Ar7s1', 'paul-f3Ar7s2', '', 'paul-f3Ar7s3', 'paul-f3Ar7s4', 'paul-f3Ar7s5', 'x', 'paul-f3Br7s1', 'paul-f3Br7s2', 'paul-f3Br7s3', '', 'paul-f3Br7s4', 'paul-f3Br7s5', 'x', 'paul-f3Br7s6', 'paul-f3Br7s7'],
-		['', 'paul-f3Ar6s1', 'paul-f3Ar6s2', 'paul-f3Ar6s3', 'paul-f3Ar6s4', 'paul-f3Ar6s5', 'paul-f3Ar6s6', 'paul-f3Ar6s7', '', 'paul-f3Ar6s8', 'paul-f3Ar6s9', 'paul-f3Ar6s10', 'x', 'paul-f3Br6s1', 'paul-f3Br6s2', 'paul-f3Br6s3', '', 'paul-f3Br6s4', 'paul-f3Br6s5', 'paul-f3Br6s6', 'paul-f3Br6s7', 'paul-f3Br6s8'],
-		['paul-f3Ar5s1', 'paul-f3Ar5s2', 'paul-f3Ar5s3', 'paul-f3Ar5s4', 'paul-f3Ar5s5', 'paul-f3Ar5s6', 'paul-f3Ar5s7', 'paul-f3Ar5s8', '', 'paul-f3Ar5s9', 'paul-f3Ar5s10', 'paul-f3Ar5s11', 'x', 'paul-f3Br5s1', 'paul-f3Br5s2', 'paul-f3Br5s3', '', 'paul-f3Br5s4', 'paul-f3Br5s5', 'paul-f3Br5s6', 'paul-f3Br5s7', 'paul-f3Br5s8'],
-		['paul-f3Ar4s1', 'paul-f3Ar4s2', 'paul-f3Ar4s3', 'paul-f3Ar4s4', 'paul-f3Ar4s5', 'x', 'paul-f3Ar4s6', 'paul-f3Ar4s7', '', 'paul-f3Ar4s8', 'paul-f3Ar4s9', 'paul-f3Ar4s10', 'x', 'paul-f3Br4s1', 'paul-f3Br4s2', 'paul-f3Br4s3', '', 'paul-f3Br4s4', 'paul-f3Br4s5', 'paul-f3Br4s6', 'paul-f3Br4s7', 'paul-f3Br4s8'],
-		['paul-f3Ar3s1', 'paul-f3Ar3s2', 'paul-f3Ar3s3', 'paul-f3Ar3s4', 'paul-f3Ar3s5', 'paul-f3Ar3s6', 'paul-f3Ar3s7', 'paul-f3Ar3s8', '', 'paul-f3Ar3s9', 'paul-f3Ar3s10', 'paul-f3Ar3s11', 'x', 'paul-f3Br3s1', 'paul-f3Br3s2', 'paul-f3Br3s3', '', 'paul-f3Br3s4', 'paul-f3Br3s5', 'x', 'paul-f3Br3s6', 'paul-f3Br3s7'],
-		['paul-f3Ar2s1', 'paul-f3Ar2s2', 'paul-f3Ar2s3', 'paul-f3Ar2s4', 'paul-f3Ar2s5', 'x', 'x', 'x', 'd', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'd', 'x', 'x', 'x', 'paul-f3Br2s1', 'paul-f3Br2s2'],
-		['paul-f3Ar1s1', 'paul-f3Ar1s2', 'x', 'x', 'x', 'x', '', '', '', '', '', '', '|', '', '', '', '', '', '', 'x', 'paul-f3Br1s1', 'paul-f3Br1s2'],
-		['', '', 'd', '', '', '', '', '', '', '', '', '', '|', '', '', '', '', '', '', 'd', '', '']
-	],
-	"paul-f4": [
-		['R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['', '', '', '', '', '', '', '', '', '', '', '', 'x', 'paul-f4Br9s1', 'paul-f4Br9s2', 'paul-f4Br9s3', '', '', '', '', '', ''],
-		['', '', '', 'paul-f4Ar8s1', 'paul-f4Ar8s2', 'paul-f4Ar8s3', 'paul-f4Ar8s4', 'paul-f4Ar8s5', '', 'paul-f4Ar8s6', 'paul-f4Ar8s7', 'paul-f4Ar8s8', 'x', 'paul-f4Br8s1', 'paul-f4Br8s2', 'paul-f4Br8s3', '', '', '', '', '', ''],
-		['paul-f4Ar7s1', 'paul-f4Ar7s2', 'paul-f4Ar7s3', 'paul-f4Ar7s4', 'paul-f4Ar7s5', 'paul-f4Ar7s6', 'paul-f4Ar7s7', 'paul-f4Ar7s8', '', 'paul-f4Ar7s9', 'paul-f4Ar7s10', 'paul-f4Ar7s11', 'x', 'paul-f4Br7s1', 'paul-f4Br7s2', 'paul-f4Br7s3', '', 'paul-f4Br7s4', 'paul-f4Br7s5', 'x', 'paul-f4Br7s6', 'paul-f4Br7s7'],
-		['paul-f4Ar6s1', 'paul-f4Ar6s2', 'paul-f4Ar6s3', 'paul-f4Ar6s4', 'paul-f4Ar6s5', 'x', 'paul-f4Ar6s6', 'paul-f4Ar6s7', '', 'paul-f4Ar6s8', 'paul-f4Ar6s9', 'paul-f4Ar6s10', 'x', 'paul-f4Br6s1', 'paul-f4Br6s2', 'paul-f4Br6s3', '', 'paul-f4Br6s4', 'paul-f4Br6s5', 'paul-f4Br6s6', 'paul-f4Br6s7', 'paul-f4Br6s8'],
-		['paul-f4Ar5s1', 'paul-f4Ar5s2', 'paul-f4Ar5s3', 'paul-f4Ar5s4', 'paul-f4Ar5s5', 'paul-f4Ar5s6', 'paul-f4Ar5s7', 'paul-f4Ar5s8', '', 'paul-f4Ar5s9', 'paul-f4Ar5s10', 'paul-f4Ar5s11', 'x', 'paul-f4Br5s1', 'paul-f4Br5s2', 'paul-f4Br5s3', '', 'paul-f4Br5s4', 'paul-f4Br5s5', 'paul-f4Br5s6', 'paul-f4Br5s7', 'paul-f4Br5s8'],
-		['paul-f4Ar4s1', 'paul-f4Ar4s2', 'paul-f4Ar4s3', 'paul-f4Ar4s4', 'paul-f4Ar4s5', 'x', 'x', 'x', 'd', 'x', 'x', 'x', 'x', 'paul-f4Br4s1', 'paul-f4Br4s2', 'paul-f4Br4s3', '', 'paul-f4Br4s4', 'paul-f4Br4s5', 'paul-f4Br4s6', 'paul-f4Br4s7', 'paul-f4Br4s8'],
-		['paul-f4Ar3s1', 'paul-f4Ar3s2', '', '', '', 'x', '', '', '', '', '', '', 'x', 'paul-f4Br3s1', 'paul-f4Br3s2', 'paul-f4Br3s3', '', 'paul-f4Br3s4', 'paul-f4Br3s5', 'x', 'paul-f4Br3s6', 'paul-f4Br3s7'],
-		['paul-f4Ar2s1', 'paul-f4Ar2s2', 'paul-f4Ar2s3', 'paul-f4Ar2s4', 'paul-f4Ar2s5', 'd', '', '', '', '', '', '', 'x', 'x', 'x', 'x', 'd', 'x', 'x', 'x', 'paul-f4Br2s1', 'paul-f4Br2s2'],
-		['paul-f4Ar1s1', 'paul-f4Ar1s2', 'paul-f4Ar1s3', 'paul-f4Ar1s4', 'paul-f4Ar1s5', 'x', '', '', '', '', '', '', '|', '', '', '', '', '', '', 'd', 'paul-f4Br1s1', 'paul-f4Br1s2']
-	],
-	"paul-f5": [
-		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['', '', '', '', '', '', '', '', '', '', 'paul-f5Ar6s1', 'paul-f5Ar6s2', 'x', 'paul-f5Br6s1', 'paul-f5Br6s2', 'paul-f5Br6s3', '', 'paul-f5Br6s4', 'paul-f5Br6s5', 'paul-f5Br6s6', 'paul-f5Br6s7'],
-		['', '', '', '', '', '', '', '', '', 'paul-f5Ar5s1', 'paul-f5Ar5s2', 'paul-f5Ar5s3', 'x', 'paul-f5Br5s1', 'paul-f5Br5s2', 'paul-f5Br5s3', '', 'paul-f5Br5s4', 'paul-f5Br5s5', 'paul-f5Br5s6', 'paul-f5Br5s7'],
-		['', '', '', '', '', '', 'paul-f5Ar4s1', 'paul-f5Ar4s2', '', 'paul-f5Ar4s3', 'paul-f5Ar4s4', 'paul-f5Ar4s5', 'x', 'paul-f5Br4s1', 'paul-f5Br4s2', 'paul-f5Br4s3', '', 'paul-f5Br4s4', 'paul-f5Br4s5', 'paul-f5Br4s6', 'paul-f5Br4s7'],
-		['', 'paul-f5Ar3s1', 'paul-f5Ar3s2', 'paul-f5Ar3s3', 'paul-f5Ar3s4', 'paul-f5Ar3s5', 'paul-f5Ar3s6', 'paul-f5Ar3s7', '', 'paul-f5Ar3s8', 'paul-f5Ar3s9', 'paul-f5Ar3s10', 'x', 'paul-f5Br3s1', 'paul-f5Br3s2', 'paul-f5Br3s3', '', 'paul-f5Br3s4', 'paul-f5Br3s5', 'x', 'paul-f5Br3s6'],
-		['paul-f5Ar2s1', 'paul-f5Ar2s2', 'paul-f5Ar2s3', 'paul-f5Ar2s4', 'paul-f5Ar2s5', 'x', 'x', 'x', 'd', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'd', 'x', 'paul-f5Br2s1', 'x', 'paul-f5Br2s2'],
-		['paul-f5Ar1s1', 'paul-f5Ar1s2', 'paul-f5Ar1s3', 'paul-f5Ar1s4', 'paul-f5Ar1s5', 'x', '', '', '', '', '', '', '|', '', '', '', '', 'x', 'paul-f5Br1s1', 'paul-f5Br1s2', 'paul-f5Br1s3'],
-		['', '', '', '', '', 'd', '', '', '', '', '', '', '|', '', '', '', '', 'd', '', '', '']
-	],
-	"made-f0A": [
-		['R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['made-f0Ar13s1', '', 'made-f0Ar13s2', '', 'made-f0Ar13s3', '', '', 'x', '', '', '', '', '', '', ''],
-		['made-f0Ar12s1', 'made-f0Ar12s2', 'made-f0Ar12s3', 'made-f0Ar12s4', 'made-f0Ar12s5', 'made-f0Ar12s6', '', 'x', '', 'made-f0Ar12s7', 'made-f0Ar12s8', 'made-f0Ar12s9', 'made-f0Ar12s10', 'made-f0Ar12s11', 'made-f0Ar12s12'],
-		['made-f0Ar11s1', 'made-f0Ar11s2', 'made-f0Ar11s3', 'made-f0Ar11s4', 'made-f0Ar11s5', 'made-f0Ar11s6', '', 'x', '', 'made-f0Ar11s7', 'made-f0Ar11s8', 'made-f0Ar11s9', 'made-f0Ar11s10', 'made-f0Ar11s11', 'made-f0Ar11s12'],
-		['made-f0Ar10s1', 'made-f0Ar10s2', 'made-f0Ar10s3', 'made-f0Ar10s4', 'made-f0Ar10s5', 'made-f0Ar10s6', '', 'x', '', 'made-f0Ar10s7', 'made-f0Ar10s8', 'made-f0Ar10s9', 'made-f0Ar10s10', 'made-f0Ar10s11', 'made-f0Ar10s12'],
-		['made-f0Ar9s1', 'made-f0Ar9s2', 'made-f0Ar9s3', 'made-f0Ar9s4', 'made-f0Ar9s5', 'made-f0Ar9s6', '', '', '', 'made-f0Ar9s7', '', 'made-f0Ar9s8', 'made-f0Ar9s9', 'made-f0Ar9s10', 'made-f0Ar9s11'],
-		['made-f0Ar8s1', 'made-f0Ar8s2', 'made-f0Ar8s3', 'made-f0Ar8s4', 'made-f0Ar8s5', 'made-f0Ar8s6', '', '', '', 'made-f0Ar8s7', 'made-f0Ar8s8', 'made-f0Ar8s9', 'made-f0Ar8s10', 'made-f0Ar8s11', 'made-f0Ar8s12'],
-		['made-f0Ar7s1', 'made-f0Ar7s2', 'made-f0Ar7s3', 'made-f0Ar7s4', 'made-f0Ar7s5', 'made-f0Ar7s6', '', 'x', '', 'made-f0Ar7s7', 'made-f0Ar7s8', 'made-f0Ar7s9', 'made-f0Ar7s10', 'made-f0Ar7s11', 'made-f0Ar7s12'],
-		['made-f0Ar6s1', 'made-f0Ar6s2', 'made-f0Ar6s3', 'made-f0Ar6s4', 'made-f0Ar6s5', 'made-f0Ar6s6', '', 'x', '', 'made-f0Ar6s7', 'made-f0Ar6s8', 'made-f0Ar6s9', 'made-f0Ar6s10', 'made-f0Ar6s11', 'made-f0Ar6s12'],
-		['made-f0Ar5s1', 'made-f0Ar5s2', 'made-f0Ar5s3', 'made-f0Ar5s4', 'made-f0Ar5s5', 'made-f0Ar5s6', '', 'x', '', 'made-f0Ar5s7', 'made-f0Ar5s8', 'made-f0Ar5s9', 'made-f0Ar5s10', 'made-f0Ar5s11', 'made-f0Ar5s12'],
-		['made-f0Ar4s1', 'made-f0Ar4s2', 'made-f0Ar4s3', 'made-f0Ar4s4', 'made-f0Ar4s5', 'made-f0Ar4s6', '', 'x', '', 'made-f0Ar4s7', 'made-f0Ar4s8', 'made-f0Ar4s9', 'made-f0Ar4s10', 'made-f0Ar4s11', 'made-f0Ar4s12'],
-		['made-f0Ar3s1', 'made-f0Ar3s2', 'made-f0Ar3s3', 'made-f0Ar3s4', 'made-f0Ar3s5', 'made-f0Ar3s6', '', 'x', '', 'made-f0Ar3s7', 'made-f0Ar3s8', 'made-f0Ar3s9', 'made-f0Ar3s10', 'made-f0Ar3s11', 'made-f0Ar3s12'],
-		['made-f0Ar2s1', 'made-f0Ar2s2', 'made-f0Ar2s3', 'made-f0Ar2s4', 'made-f0Ar2s5', 'made-f0Ar2s6', '', 'x', '', 'made-f0Ar2s7', 'made-f0Ar2s8', 'made-f0Ar2s9', 'made-f0Ar2s10', 'made-f0Ar2s11', 'made-f0Ar2s12'],
-		['made-f0Ar1s1', 'made-f0Ar1s2', 'made-f0Ar1s3', 'made-f0Ar1s4', 'made-f0Ar1s5', 'made-f0Ar1s6', '', 'x', '', 'made-f0Ar1s7', '', 'made-f0Ar1s8', '', 'made-f0Ar1s9', ''],
-		['', '', '', '', '', '', '', 'x', '', 'd', 'd', '', '', '', '']
-	],
-	"made-f0B": [
-		['R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['made-f0Br8s1', 'made-f0Br8s2', 'made-f0Br8s3', 'made-f0Br8s4', 'made-f0Br8s5', 'made-f0Br8s6', '', 'made-f0Br8s7', 'made-f0Br8s8', 'made-f0Br8s9', 'made-f0Br8s10', 'made-f0Br8s11', 'made-f0Br8s12', 'made-f0Br8s13', '', 'made-f0Br8s14', 'made-f0Br8s15', 'made-f0Br8s16', 'made-f0Br8s17', 'made-f0Br8s18', 'made-f0Br8s19'],
-		['made-f0Br7s1', 'made-f0Br7s2', 'made-f0Br7s3', 'made-f0Br7s4', 'made-f0Br7s5', 'made-f0Br7s6', '', 'made-f0Br7s7', 'made-f0Br7s8', 'made-f0Br7s9', 'made-f0Br7s10', 'made-f0Br7s11', 'made-f0Br7s12', 'made-f0Br7s13', '', 'made-f0Br7s14', 'made-f0Br7s15', 'made-f0Br7s16', 'made-f0Br7s17', 'made-f0Br7s18', 'made-f0Br7s19'],
-		['made-f0Br6s1', 'made-f0Br6s2', 'made-f0Br6s3', 'made-f0Br6s4', 'made-f0Br6s5', 'made-f0Br6s6', '', 'made-f0Br6s7', 'made-f0Br6s8', 'made-f0Br6s9', 'made-f0Br6s10', 'made-f0Br6s11', 'made-f0Br6s12', 'made-f0Br6s13', '', 'made-f0Br6s14', 'made-f0Br6s15', 'made-f0Br6s16', 'made-f0Br6s17', 'made-f0Br6s18', 'made-f0Br6s19'],
-		['made-f0Br5s1', 'made-f0Br5s2', 'made-f0Br5s3', 'made-f0Br5s4', 'made-f0Br5s5', 'made-f0Br5s6', '', '', '', '', '', '', '', '', '', 'made-f0Br5s7', 'made-f0Br5s8', 'made-f0Br5s9', 'made-f0Br5s10', 'made-f0Br5s11', 'made-f0Br5s12'],
-		['made-f0Br4s1', 'made-f0Br4s2', 'made-f0Br4s3', 'made-f0Br4s4', 'made-f0Br4s5', 'made-f0Br4s6', '', 'x', 'x', 'x', 'x', 'x', 'x', 'x', '', 'made-f0Br4s7', 'made-f0Br4s8', 'made-f0Br4s9', 'made-f0Br4s10', 'made-f0Br4s11', 'made-f0Br4s12'],
-		['made-f0Br3s1', 'made-f0Br3s2', 'made-f0Br3s3', 'made-f0Br3s4', 'made-f0Br3s5', 'made-f0Br3s6', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Br3s7', 'made-f0Br3s8', 'made-f0Br3s9', 'made-f0Br3s10', 'made-f0Br3s11', 'made-f0Br3s12'],
-		['', 'made-f0Br2s1', '', 'made-f0Br2s2', '', 'made-f0Br2s3', '', 'x', 'x', 'x', 'x', 'x', 'x', 'x', '', 'made-f0Br2s4', 'made-f0Br2s5', 'made-f0Br2s6', 'made-f0Br2s7', 'made-f0Br2s8', 'made-f0Br2s9'],
-		['', '', '', '', '', '', 'd', '', '', '', '', '', '', '', '', 'made-f0Br1s1', 'made-f0Br1s2', 'made-f0Br1s3', 'made-f0Br1s4', 'made-f0Br1s5', 'made-f0Br1s6']
-	],
-	"made-f0C": [
-		['R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['d', 'made-f0Cr13s1', 'made-f0Cr13s2', 'made-f0Cr13s3', 'made-f0Cr13s4', 'made-f0Cr13s5', 'made-f0Cr13s6'],
-		['', 'made-f0Cr12s1', 'made-f0Cr12s2', 'made-f0Cr12s3', 'made-f0Cr12s4', 'made-f0Cr12s5', 'made-f0Cr12s6'],
-		['', 'made-f0Cr11s1', 'made-f0Cr11s2', 'made-f0Cr11s3', 'made-f0Cr11s4', 'made-f0Cr11s5', 'made-f0Cr11s6'],
-		['', 'made-f0Cr10s1', 'made-f0Cr10s2', 'made-f0Cr10s3', 'made-f0Cr10s4', 'made-f0Cr10s5', 'made-f0Cr10s6'],
-		['', 'made-f0Cr9s1', 'made-f0Cr9s2', 'made-f0Cr9s3', 'made-f0Cr9s4', 'made-f0Cr9s5', 'made-f0Cr9s6'],
-		['', 'made-f0Cr8s1', 'made-f0Cr8s2', 'made-f0Cr8s3', 'made-f0Cr8s4', 'made-f0Cr8s5', 'made-f0Cr8s6'],
-		['', 'made-f0Cr7s1', 'made-f0Cr7s2', 'made-f0Cr7s3', 'made-f0Cr7s4', 'made-f0Cr7s5', 'made-f0Cr7s6'],
-		['', 'made-f0Cr6s1', 'made-f0Cr6s2', 'made-f0Cr6s3', 'made-f0Cr6s4', 'made-f0Cr6s5', 'made-f0Cr6s6'],
-		['', 'made-f0Cr5s1', 'made-f0Cr5s2', 'made-f0Cr5s3', 'made-f0Cr5s4', 'made-f0Cr5s5', 'made-f0Cr5s6'],
-		['', 'made-f0Cr4s1', 'made-f0Cr4s2', 'made-f0Cr4s3', 'made-f0Cr4s4', 'made-f0Cr4s5', 'made-f0Cr4s6'],
-		['', 'made-f0Cr3s1', 'made-f0Cr3s2', 'made-f0Cr3s3', 'made-f0Cr3s4', 'made-f0Cr3s5', 'made-f0Cr3s6'],
-		['', 'made-f0Cr2s1', 'made-f0Cr2s2', 'made-f0Cr2s3', 'made-f0Cr2s4', 'made-f0Cr2s5', 'made-f0Cr2s6'],
-		['d', '', 'made-f0Cr1s1', '', 'made-f0Cr1s2', '', 'made-f0Cr1s3']
-	],
-	"made-f0D": [
-		['R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['made-f0Dr11s1', 'made-f0Dr11s2', 'made-f0Dr11s3', 'made-f0Dr11s4', 'made-f0Dr11s5', 'made-f0Dr11s6', '', 'made-f0Dr11s7', 'made-f0Dr11s8', 'made-f0Dr11s9', 'made-f0Dr11s10', 'made-f0Dr11s11', 'made-f0Dr11s12', 'made-f0Dr11s13', '', 'made-f0Dr11s14', 'made-f0Dr11s15', 'made-f0Dr11s16', 'made-f0Dr11s17', 'made-f0Dr11s18', 'made-f0Dr11s19'],
-		['made-f0Dr10s1', 'made-f0Dr10s2', 'made-f0Dr10s3', 'made-f0Dr10s4', 'made-f0Dr10s5', 'made-f0Dr10s6', '', 'made-f0Dr10s7', 'made-f0Dr10s8', 'made-f0Dr10s9', 'made-f0Dr10s10', 'made-f0Dr10s11', 'made-f0Dr10s12', 'made-f0Dr10s13', '', 'made-f0Dr10s14', 'made-f0Dr10s15', 'made-f0Dr10s16', 'made-f0Dr10s17', 'made-f0Dr10s18', 'made-f0Dr10s19'],
-		['made-f0Dr9s1', 'made-f0Dr9s2', 'made-f0Dr9s3', 'made-f0Dr9s4', 'made-f0Dr9s5', 'made-f0Dr9s6', '', 'made-f0Dr9s7', 'made-f0Dr9s8', 'made-f0Dr9s9', 'made-f0Dr9s10', 'made-f0Dr9s11', 'made-f0Dr9s12', 'made-f0Dr9s13', '', 'made-f0Dr9s14', 'made-f0Dr9s15', 'made-f0Dr9s16', 'made-f0Dr9s17', 'made-f0Dr9s18', 'made-f0Dr9s19'],
-		['made-f0Dr8s1', 'made-f0Dr8s2', 'made-f0Dr8s3', 'made-f0Dr8s4', 'made-f0Dr8s5', 'made-f0Dr8s6', '', '', '', '', '', '', '', '', '', 'made-f0Dr8s7', 'made-f0Dr8s8', 'made-f0Dr8s9', 'made-f0Dr8s10', 'made-f0Dr8s11', 'made-f0Dr8s12'],
-		['made-f0Dr7s1', 'made-f0Dr7s2', 'made-f0Dr7s3', 'made-f0Dr7s4', 'made-f0Dr7s5', 'made-f0Dr7s6', '', 'x', 'x', 'x', 'x', 'x', 'x', 'x', '', 'made-f0Dr7s7', 'made-f0Dr7s8', 'made-f0Dr7s9', 'made-f0Dr7s10', 'made-f0Dr7s11', 'made-f0Dr7s12'],
-		['made-f0Dr6s1', 'made-f0Dr6s2', 'made-f0Dr6s3', 'made-f0Dr6s4', 'made-f0Dr6s5', 'made-f0Dr6s6', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Dr6s7', 'made-f0Dr6s8', 'made-f0Dr6s9', 'made-f0Dr6s10', 'made-f0Dr6s11', 'made-f0Dr6s12'],
-		['', '', '', '', '', '', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Dr5s1', 'made-f0Dr5s2', 'made-f0Dr5s3', 'made-f0Dr5s4', 'made-f0Dr5s5', 'made-f0Dr5s6'],
-		['', '', '', '', '', '', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Dr4s1', 'made-f0Dr4s2', 'made-f0Dr4s3', 'made-f0Dr4s4', 'made-f0Dr4s5', 'made-f0Dr4s6'],
-		['', '', '', '', '', '', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Dr3s1', 'made-f0Dr3s2', 'made-f0Dr3s3', 'made-f0Dr3s4', 'made-f0Dr3s5', 'made-f0Dr3s6'],
-		['', '', '', '', '', '', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Dr2s1', 'made-f0Dr2s2', 'made-f0Dr2s3', 'made-f0Dr2s4', 'made-f0Dr2s5', 'made-f0Dr2s6'],
-		['', '', '', '', '', '', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Dr1s1', '', 'made-f0Dr1s2', '', 'made-f0Dr1s3', ''],
-		['', '', '', '', '', '', '', 'x', '', '', '', '', '', 'x', '', '', '', '', '', '', 'd'],
-	],
-    "allowed": ['bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4', 'paul-f5', 'made-f0A', 'made-f0B', 'made-f0C', 'made-f0D'],
-	"buildings": {'bess': ['bess-f2', 'bess-f3', 'bess-f4'], 'paul': ['paul-f3', 'paul-f4', 'paul-f5'], 'made': ['made-f0A', 'made-f0B', 'made-f0C', 'made-f0D']},
-	"kiosk_classes": {
-		"<i class='fa-brands fa-apple'></i>": ['bess-f3', 'made-f0A', 'paul-f3'],
-		"<i class='fa-solid fa-display'></i>": ['bess-f2', 'bess-f4', 'made-f0B', 'made-f0C', 'made-f0D', 'paul-f4', 'paul-f5'],
-	},
-	"piscine": [],
-	"default": 'bess-f2',
-	"exrypz": exrypz
+	"f1": [['R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+			['f1r13s1', 'f1r13s2', 'f1r13s3', 'f1r13s4', 'f1r13s5', 'f1r13s6', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+			['f1r12s1', 'f1r12s2', 'f1r12s3', 'f1r12s4', 'f1r12s5', 'f1r12s6', 'f1r12s7', '', 'f1r12s8', 'f1r12s9', 'f1r12s10', 'f1r12s11', 'f1r12s12', 'f1r12s13', 'f1r12s14', 'f1r12s15', 'f1r12s16', '', 'f1r12s17', 'f1r12s18', 'f1r12s19', 'f1r12s20', 'f1r12s21', 'f1r12s22', 'f1r12s23'],
+			['f1r11s1', 'f1r11s2', 'f1r11s3', 'f1r11s4', 'f1r11s5', 'f1r11s6', 'f1r11s7', '', 'f1r11s8', 'f1r11s9', 'f1r11s10', 'f1r11s11', 'f1r11s12', 'f1r11s13', 'f1r11s14', 'f1r11s15', 'f1r11s16', '', 'f1r11s17', 'f1r11s18', 'f1r11s19', 'f1r11s20', 'f1r11s21', 'f1r11s22', 'f1r11s23'],
+			['f1r10s1', 'f1r10s2', 'f1r10s3', 'f1r10s4', 'f1r10s5', 'f1r10s6', 'f1r10s7', '', 'f1r10s8', 'f1r10s9', 'f1r10s10', 'f1r10s11', 'f1r10s12', 'f1r10s13', 'f1r10s14', 'f1r10s15', 'f1r10s16', '', 'f1r10s17', 'f1r10s18', 'f1r10s19', 'f1r10s20', 'f1r10s21', 'f1r10s22', 'f1r10s23'],
+			['f1r9s1', 'f1r9s2', 'f1r9s3', 'f1r9s4', 'f1r9s5', 'f1r9s6', 'f1r9s7', '', '', 'f1r9s8', 'f1r9s9', 'f1r9s10', 'f1r9s11', 'f1r9s12', 'f1r9s13', 'f1r9s14', '', '', 'f1r9s15', 'f1r9s16', 'f1r9s17', 'f1r9s18', 'f1r9s19', 'f1r9s20', 'f1r9s21'],
+			['f1r8s1', 'f1r8s2', 'f1r8s3', 'f1r8s4', 'f1r8s5', 'f1r8s6', '', '', 'f1r8s7', 'f1r8s8', 'f1r8s9', 'f1r8s10', 'f1r8s11', 'f1r8s12', 'f1r8s13', 'f1r8s14', '', '', 'f1r8s15', 'f1r8s16', 'f1r8s17', 'f1r8s18', 'f1r8s19', 'f1r8s20', 'f1r8s21'],
+			['f1r7s1', 'f1r7s2', 'f1r7s3', 'f1r7s4', 'f1r7s5', 'f1r7s6', 'f1r7s7', '', 'f1r7s8', 'f1r7s9', 'f1r7s10', 'f1r7s11', 'f1r7s12', 'f1r7s13', 'f1r7s14', 'f1r7s15', 'f1r7s16', '', 'f1r7s17', 'f1r7s18', 'f1r7s19', 'f1r7s20', 'f1r7s21', 'f1r7s22', 'f1r7s23'],
+			['f1r6s1', 'f1r6s2', 'f1r6s3', 'f1r6s4', 'f1r6s5', 'f1r6s6', 'f1r6s7', '', '', '', 'f1r6s8', 'f1r6s9', 'f1r6s10', 'f1r6s11', 'f1r6s12', 'f1r6s13', 'f1r6s14', '', '', 'f1r6s15', 'f1r6s16', 'f1r6s17', 'f1r6s18', 'f1r6s19', 'f1r6s20'],
+			['f1r5s1', 'f1r5s2', 'f1r5s3', 'f1r5s4', 'f1r5s5', 'f1r5s6', 'f1r5s7', '', 'f1r5s8', 'f1r5s9', 'f1r5s10', 'f1r5s11', 'f1r5s12', 'f1r5s13', 'f1r5s14', 'f1r5s15', 'f1r5s16', '', '', 'f1r5s17', 'f1r5s18', 'f1r5s19', 'f1r5s20', 'f1r5s21', 'f1r5s22'],
+			['f1r4s1', 'f1r4s2', 'f1r4s3', 'f1r4s4', 'f1r4s5', 'f1r4s6', 'f1r4s7', '', 'f1r4s8', 'f1r4s9', 'f1r4s10', 'f1r4s11', 'f1r4s12', 'f1r4s13', 'f1r4s14', 'f1r4s15', 'f1r4s16', '', 'f1r4s17', 'f1r4s18', 'f1r4s19', 'f1r4s20', 'f1r4s21', 'f1r4s22', 'f1r4s23'],
+			['f1r3s1', 'f1r3s2', 'f1r3s3', 'f1r3s4', 'f1r3s5', 'f1r3s6', 'f1r3s7', '', '', 'f1r3s8', 'f1r3s9', 'f1r3s10', 'f1r3s11', 'f1r3s12', 'f1r3s13', 'f1r3s14', '', '', 'f1r3s15', 'f1r3s16', 'f1r3s17', 'f1r3s18', 'f1r3s19', 'f1r3s20', 'f1r3s21'],
+			['f1r2s1', 'f1r2s2', 'f1r2s3', 'f1r2s4', 'f1r2s5', 'f1r2s6', 'f1r2s7', '', 'f1r2s8', 'f1r2s9', 'f1r2s10', 'f1r2s11', 'f1r2s12', 'f1r2s13', 'f1r2s14', 'f1r2s15', 'f1r2s16', '', 'f1r2s17', 'f1r2s18', 'f1r2s19', 'f1r2s20', 'f1r2s21', 'f1r2s22', 'f1r2s23'],
+			['f1r1s1', 'f1r1s2', 'f1r1s3', 'f1r1s4', 'f1r1s5', 'f1r1s6', 'f1r1s7', '', '', '', '', '', '', '', '', '', '', '', 'f1r1s8', 'f1r1s9', 'f1r1s10', 'f1r1s11', 'f1r1s12', 'f1r1s13', 'f1r1s14']
+		],
+	"f1b": [['R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+			['f1br10s1', 'f1br10s2', 'f1br10s3', 'f1br10s4', 'f1br10s5', 'f1br10s6', 'f1br10s7', 'f1br10s8'],
+			['f1br9s1', 'f1br9s2', 'f1br9s3', 'f1br9s4', 'f1br9s5', 'f1br9s6', 'f1br9s7', 'f1br9s8', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
+			['f1br8s1', 'f1br8s2', 'f1br8s3', 'f1br8s4', 'f1br8s5', 'f1br8s6', 'f1br8s7', 'f1br8s8', '', 'f1br8s9', 'f1br8s10', 'f1br8s11', 'f1br8s12', 'f1br8s13', 'f1br8s14', 'f1br8s15', 'f1br8s16', 'f1br8s17', 'f1br8s18', 'f1br8s19', 'f1br8s20', 'f1br8s21'],
+			['f1br7s1', 'f1br7s2', 'f1br7s3', 'f1br7s4', 'f1br7s5', 'f1br7s6', 'f1br7s7', 'f1br7s8', '', 'f1br7s9', 'f1br7s10', 'f1br7s11', 'f1br7s12', 'f1br7s13', 'f1br7s14', 'f1br7s15', 'f1br7s16', '', '', '', '', ''],
+			['f1br6s1', 'f1br6s2', 'f1br6s3', 'f1br6s4', 'f1br6s5', 'f1br6s6', 'f1br6s7', 'f1br6s8', '', 'f1br6s9', 'f1br6s10', 'f1br6s11', 'f1br6s12', 'f1br6s13', 'f1br6s14', 'f1br6s15', 'f1br6s16', 'f1br6s17', 'f1br6s18', 'f1br6s19', 'f1br6s20', 'f1br6s21'],
+			['f1br5s1', 'f1br5s2', 'f1br5s3', 'f1br5s4', 'f1br5s5', 'f1br5s6', 'f1br5s7', 'f1br5s8', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
+			['f1br4s1', 'f1br4s2', 'f1br4s3', 'f1br4s4', 'f1br4s5', 'f1br4s6', 'f1br4s7', 'f1br4s8'],
+			['f1br3s1', 'f1br3s2', 'f1br3s3', 'f1br3s4', 'f1br3s5', 'f1br3s6', 'f1br3s7', 'f1br3s8'],
+			['f1br2s1', 'f1br2s2', 'f1br2s3', 'f1br2s4', 'f1br2s5', 'f1br2s6', 'f1br2s7', 'f1br2s8'],
+			['f1br1s1', 'f1br1s2', 'f1br1s3', 'f1br1s4', 'f1br1s5', 'f1br1s6', 'f1br1s7', 'f1br1s8']
+		],
+	"f2": [['R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+			['f2r12s1', 'f2r12s2', 'f2r12s3', 'f2r12s4', 'f2r12s5', 'f2r12s6', 'f2r12s7', '', 'f2r12s8', 'f2r12s9', 'f2r12s10', 'f2r12s11', 'f2r12s12', 'f2r12s13', 'f2r12s14', 'f2r12s15', 'f2r12s16', '', 'f2r12s17', 'f2r12s18', 'f2r12s19', 'f2r12s20', 'f2r12s21', 'f2r12s22', 'f2r12s23'],
+			['f2r11s1', 'f2r11s2', 'f2r11s3', 'f2r11s4', 'f2r11s5', 'f2r11s6', 'f2r11s7', '', 'f2r11s8', 'f2r11s9', 'f2r11s10', 'f2r11s11', 'f2r11s12', 'f2r11s13', 'f2r11s14', 'f2r11s15', 'f2r11s16', '', 'f2r11s17', 'f2r11s18', 'f2r11s19', 'f2r11s20', 'f2r11s21', 'f2r11s22', 'f2r11s23'],
+			['f2r10s1', 'f2r10s2', 'f2r10s3', 'f2r10s4', 'f2r10s5', 'f2r10s6', 'f2r10s7', '', 'f2r10s8', 'f2r10s9', 'f2r10s10', 'f2r10s11', 'f2r10s12', 'f2r10s13', 'f2r10s14', 'f2r10s15', 'f2r10s16', '', 'f2r10s17', 'f2r10s18', 'f2r10s19', 'f2r10s20', 'f2r10s21', 'f2r10s22', 'f2r10s23'],
+			['f2r9s1', 'f2r9s2', 'f2r9s3', 'f2r9s4', 'f2r9s5', 'f2r9s6', '', '', '', 'f2r9s7', 'f2r9s8', 'f2r9s9', 'f2r9s10', 'f2r9s11', 'f2r9s12', 'f2r9s13', '', '', 'f2r9s14', 'f2r9s15', 'f2r9s16', 'f2r9s17', 'f2r9s18', 'f2r9s19', 'f2r9s20'],
+			['f2r8s1', 'f2r8s2', 'f2r8s3', 'f2r8s4', 'f2r8s5', 'f2r8s6', '', '', '', 'f2r8s7', 'f2r8s8', 'f2r8s9', 'f2r8s10', 'f2r8s11', 'f2r8s12', 'f2r8s13', 'f2r8s14', '', 'f2r8s15', 'f2r8s16', 'f2r8s17', 'f2r8s18', 'f2r8s19', 'f2r8s20', 'f2r8s21'],
+			['f2r7s1', 'f2r7s2', 'f2r7s3', 'f2r7s4', 'f2r7s5', 'f2r7s6', 'f2r7s7', '', 'f2r7s8', 'f2r7s9', 'f2r7s10', 'f2r7s11', 'f2r7s12', 'f2r7s13', 'f2r7s14', 'f2r7s15', 'f2r7s16', '', 'f2r7s17', 'f2r7s18', 'f2r7s19', 'f2r7s20', 'f2r7s21', 'f2r7s22', 'f2r7s23'],
+			['f2r6s1', 'f2r6s2', 'f2r6s3', 'f2r6s4', 'f2r6s5', 'f2r6s6', 'f2r6s7', '', '', 'f2r6s8', 'f2r6s9', 'f2r6s10', 'f2r6s11', 'f2r6s12', 'f2r6s13', 'f2r6s14', '', '', '', 'f2r6s15', 'f2r6s16', 'f2r6s17', 'f2r6s18', 'f2r6s19', 'f2r6s20'],
+			['f2r5s1', 'f2r5s2', 'f2r5s3', 'f2r5s4', 'f2r5s5', 'f2r5s6', 'f2r5s7', '', 'f2r5s8', 'f2r5s9', 'f2r5s10', 'f2r5s11', 'f2r5s12', 'f2r5s13', 'f2r5s14', 'f2r5s15', 'f2r5s16', '', '', 'f2r5s17', 'f2r5s18', 'f2r5s19', 'f2r5s20', 'f2r5s21', 'f2r5s22'],
+			['f2r4s1', 'f2r4s2', 'f2r4s3', 'f2r4s4', 'f2r4s5', 'f2r4s6', 'f2r4s7', '', 'f2r4s8', 'f2r4s9', 'f2r4s10', 'f2r4s11', 'f2r4s12', 'f2r4s13', 'f2r4s14', 'f2r4s15', 'f2r4s16', '', 'f2r4s17', 'f2r4s18', 'f2r4s19', 'f2r4s20', 'f2r4s21', 'f2r4s22', 'f2r4s23'],
+			['f2r3s1', 'f2r3s2', 'f2r3s3', 'f2r3s4', 'f2r3s5', 'f2r3s6', 'f2r3s7', '', '', 'f2r3s8', 'f2r3s9', 'f2r3s10', 'f2r3s11', 'f2r3s12', 'f2r3s13', 'f2r3s14', '', '', 'f2r3s15', 'f2r3s16', 'f2r3s17', 'f2r3s18', 'f2r3s19', 'f2r3s20', 'f2r3s21'],
+			['f2r2s1', 'f2r2s2', 'f2r2s3', 'f2r2s4', 'f2r2s5', 'f2r2s6', 'f2r2s7', '', 'f2r2s8', 'f2r2s9', 'f2r2s10', 'f2r2s11', 'f2r2s12', 'f2r2s13', 'f2r2s14', 'f2r2s15', 'f2r2s16', '', 'f2r2s17', 'f2r2s18', 'f2r2s19', 'f2r2s20', 'f2r2s21', 'f2r2s22', 'f2r2s23'],
+			['f2r1s1', 'f2r1s2', 'f2r1s3', 'f2r1s4', 'f2r1s5', 'f2r1s6', 'f2r1s7', '', '', '', '', '', '', '', '', '', '', '', 'f2r1s8', 'f2r1s9', 'f2r1s10', 'f2r1s11', 'f2r1s12', 'f2r1s13', 'f2r1s14']
+		],
+	"f4": [['R14', 'R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+			['f4r14s1', 'f4r14s2', 'f4r14s3', 'f4r14s4', 'f4r14s5', 'f4r14s6', 'f4r14s7', 'f4r14s8', '', 'f4r14s9', 'f4r14s10', 'f4r14s11', 'f4r14s12', 'f4r14s13', 'f4r14s14', 'f4r14s15', 'f4r14s16'],
+			['f4r13s1', 'f4r13s2', 'f4r13s3', 'f4r13s4', 'f4r13s5', 'f4r13s6', 'f4r13s7', 'f4r13s8', '', 'f4r13s9', 'f4r13s10', 'f4r13s11', 'f4r13s12', 'f4r13s13', 'f4r13s14', 'f4r13s15', 'f4r13s16'],
+			['f4r12s1', 'f4r12s2', 'f4r12s3', 'f4r12s4', 'f4r12s5', 'f4r12s6', 'f4r12s7', 'f4r12s8', '', 'f4r12s9', 'f4r12s10', 'f4r12s11', 'f4r12s12', 'f4r12s13', 'f4r12s14', 'f4r12s15', 'f4r12s16'],
+			['f4r11s1', 'f4r11s2', 'f4r11s3', 'f4r11s4', 'f4r11s5', 'f4r11s6', 'f4r11s7', 'f4r11s8', '', 'f4r11s9', 'f4r11s10', 'f4r11s11', 'f4r11s12', 'f4r11s13', 'f4r11s14', 'f4r11s15', 'f4r11s16'],
+			['f4r10s1', 'f4r10s2', 'f4r10s3', 'f4r10s4', 'f4r10s5', 'f4r10s6', 'f4r10s7', 'f4r10s8', '', 'f4r10s9', 'f4r10s10', 'f4r10s11', 'f4r10s12', 'f4r10s13', 'f4r10s14', 'f4r10s15', 'f4r10s16'],
+			['f4r9s1', 'f4r9s2', 'f4r9s3', 'f4r9s4', 'f4r9s5', 'f4r9s6', 'f4r9s7', 'f4r9s8', '', 'f4r9s9', 'f4r9s10', 'f4r9s11', 'f4r9s12', 'f4r9s13', 'f4r9s14', 'f4r9s15', 'f4r9s16'],
+			['f4r8s1', 'f4r8s2', 'f4r8s3', 'f4r8s4', 'f4r8s5', 'f4r8s6', 'f4r8s7', 'f4r8s8', '', 'f4r8s9', 'f4r8s10', 'f4r8s11', 'f4r8s12', 'f4r8s13', 'f4r8s14', 'f4r8s15', 'f4r8s16'],
+			['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+			['f4r7s1', 'f4r7s2', 'f4r7s3', 'f4r7s4', 'f4r7s5', 'f4r7s6', 'f4r7s7', 'f4r7s8', '', 'f4r7s9', 'f4r7s10', 'f4r7s11', 'f4r7s12', 'f4r7s13', 'f4r7s14', 'f4r7s15', 'f4r7s16'],
+			['f4r6s1', 'f4r6s2', 'f4r6s3', 'f4r6s4', 'f4r6s5', 'f4r6s6', 'f4r6s7', 'f4r6s8', '', 'f4r6s9', 'f4r6s10', 'f4r6s11', 'f4r6s12', 'f4r6s13', 'f4r6s14', 'f4r6s15', 'f4r6s16'],
+			['f4r5s1', 'f4r5s2', 'f4r5s3', 'f4r5s4', 'f4r5s5', 'f4r5s6', 'f4r5s7', 'f4r5s8', '', 'f4r5s9', 'f4r5s10', 'f4r5s11', 'f4r5s12', 'f4r5s13', 'f4r5s14', 'f4r5s15', 'f4r5s16'],
+			['f4r4s1', 'f4r4s2', 'f4r4s3', 'f4r4s4', 'f4r4s5', 'f4r4s6', 'f4r4s7', 'f4r4s8', '', 'f4r4s9', 'f4r4s10', 'f4r4s11', 'f4r4s12', 'f4r4s13', 'f4r4s14', 'f4r4s15', 'f4r4s16'],
+			['f4r3s1', 'f4r3s2', 'f4r3s3', 'f4r3s4', 'f4r3s5', 'f4r3s6', 'f4r3s7', 'f4r3s8', '', 'f4r3s9', 'f4r3s10', 'f4r3s11', 'f4r3s12', 'f4r3s13', 'f4r3s14', 'f4r3s15', 'f4r3s16'],
+			['f4r2s1', 'f4r2s2', 'f4r2s3', 'f4r2s4', 'f4r2s5', 'f4r2s6', 'f4r2s7', 'f4r2s8', '', 'f4r2s9', 'f4r2s10', 'f4r2s11', 'f4r2s12', 'f4r2s13', 'f4r2s14', 'f4r2s15', 'f4r2s16'],
+			['f4r1s1', 'f4r1s2', 'f4r1s3', 'f4r1s4', 'f4r1s5', 'f4r1s6', 'f4r1s7', 'f4r1s8', '', 'f4r1s9', 'f4r1s10', 'f4r1s11', 'f4r1s12', 'f4r1s13', 'f4r1s14', 'f4r1s15', 'f4r1s16']
+		],
+	"f6": [['R14', 'R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+			['f6r14s1', 'f6r14s2', 'f6r14s3', 'f6r14s4', 'f6r14s5', 'f6r14s6', 'f6r14s7', 'f6r14s8', '', 'f6r14s9', 'f6r14s10', 'f6r14s11', 'f6r14s12', 'f6r14s13', 'f6r14s14', 'f6r14s15', 'f6r14s16'],
+			['f6r13s1', 'f6r13s2', 'f6r13s3', 'f6r13s4', 'f6r13s5', 'f6r13s6', 'f6r13s7', 'f6r13s8', '', 'f6r13s9', 'f6r13s10', 'f6r13s11', 'f6r13s12', 'f6r13s13', 'f6r13s14', 'f6r13s15', 'f6r13s16'],
+			['f6r12s1', 'f6r12s2', 'f6r12s3', 'f6r12s4', 'f6r12s5', 'f6r12s6', 'f6r12s7', 'f6r12s8', '', 'f6r12s9', 'f6r12s10', 'f6r12s11', 'f6r12s12', 'f6r12s13', 'f6r12s14', 'f6r12s15', 'f6r12s16'],
+			['f6r11s1', 'f6r11s2', 'f6r11s3', 'f6r11s4', 'f6r11s5', 'f6r11s6', 'f6r11s7', 'f6r11s8', '', 'f6r11s9', 'f6r11s10', 'f6r11s11', 'f6r11s12', 'f6r11s13', 'f6r11s14', 'f6r11s15', 'f6r11s16'],
+			['f6r10s1', 'f6r10s2', 'f6r10s3', 'f6r10s4', 'f6r10s5', 'f6r10s6', 'f6r10s7', 'f6r10s8', '', 'f6r10s9', 'f6r10s10', 'f6r10s11', 'f6r10s12', 'f6r10s13', 'f6r10s14', 'f6r10s15', 'f6r10s16'],
+			['f6r9s1', 'f6r9s2', 'f6r9s3', 'f6r9s4', 'f6r9s5', 'f6r9s6', 'f6r9s7', 'f6r9s8', '', 'f6r9s9', 'f6r9s10', 'f6r9s11', 'f6r9s12', 'f6r9s13', 'f6r9s14', 'f6r9s15', 'f6r9s16'],
+			['f6r8s1', 'f6r8s2', 'f6r8s3', 'f6r8s4', 'f6r8s5', 'f6r8s6', 'f6r8s7', 'f6r8s8', '', 'f6r8s9', 'f6r8s10', 'f6r8s11', 'f6r8s12', 'f6r8s13', 'f6r8s14', 'f6r8s15', 'f6r8s16'],
+			['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+			['f6r7s1', 'f6r7s2', 'f6r7s3', 'f6r7s4', 'f6r7s5', 'f6r7s6', 'f6r7s7', 'f6r7s8', '', 'f6r7s9', 'f6r7s10', 'f6r7s11', 'f6r7s12', 'f6r7s13', 'f6r7s14', 'f6r7s15', 'f6r7s16'],
+			['f6r6s1', 'f6r6s2', 'f6r6s3', 'f6r6s4', 'f6r6s5', 'f6r6s6', 'f6r6s7', 'f6r6s8', '', 'f6r6s9', 'f6r6s10', 'f6r6s11', 'f6r6s12', 'f6r6s13', 'f6r6s14', 'f6r6s15', 'f6r6s16'],
+			['f6r5s1', 'f6r5s2', 'f6r5s3', 'f6r5s4', 'f6r5s5', 'f6r5s6', 'f6r5s7', 'f6r5s8', '', 'f6r5s9', 'f6r5s10', 'f6r5s11', 'f6r5s12', 'f6r5s13', 'f6r5s14', 'f6r5s15', 'f6r5s16'],
+			['f6r4s1', 'f6r4s2', 'f6r4s3', 'f6r4s4', 'f6r4s5', 'f6r4s6', 'f6r4s7', 'f6r4s8', '', 'f6r4s9', 'f6r4s10', 'f6r4s11', 'f6r4s12', 'f6r4s13', 'f6r4s14', 'f6r4s15', 'f6r4s16'],
+			['f6r3s1', 'f6r3s2', 'f6r3s3', 'f6r3s4', 'f6r3s5', 'f6r3s6', 'f6r3s7', 'f6r3s8', '', 'f6r3s9', 'f6r3s10', 'f6r3s11', 'f6r3s12', 'f6r3s13', 'f6r3s14', 'f6r3s15', 'f6r3s16'],
+			['f6r2s1', 'f6r2s2', 'f6r2s3', 'f6r2s4', 'f6r2s5', 'f6r2s6', 'f6r2s7', 'f6r2s8', '', 'f6r2s9', 'f6r2s10', 'f6r2s11', 'f6r2s12', 'f6r2s13', 'f6r2s14', 'f6r2s15', 'f6r2s16'],
+			['f6r1s1', 'f6r1s2', 'f6r1s3', 'f6r1s4', 'f6r1s5', 'f6r1s6', 'f6r1s7', 'f6r1s8', '', 'f6r1s9', 'f6r1s10', 'f6r1s11', 'f6r1s12', 'f6r1s13', 'f6r1s14', 'f6r1s15', 'f6r1s16']
+		],             										# Clusters
+        "allowed": ['f0', 'f1', 'f1b', 'f2', 'f4', 'f6'],       # "Enabled" clusters
+	"piscine": ['']  ,      # "Piscine" reserved clusters
+	"buildings": {},        # kiosk buildings
+	"kiosk_classes": {},    # kiosk icon classes
+	"default": 'f0',        # Default cluster to appear on the site
+	"exrypz": exrypz        # Function to parse locations
 }
 
 # @formatter:on
