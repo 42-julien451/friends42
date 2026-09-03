@@ -15,10 +15,10 @@ def anonymise_messages(messages: list):
 	return final_messages
 
 
-def main(login: str):
+def main(username: str):
 	data = {}
 	with Db() as db:
-		user = db.get_user_profile(login)
+		user = db.get_user_profile(username)
 		if user is None:
 			print("User does not exists")
 			exit(1)
@@ -32,13 +32,13 @@ def main(login: str):
 		data['mates'] = db.get_mates_by_user(user_id)
 		data['messages'] = anonymise_messages(db.get_raw_messages(user_id))
 	os.makedirs("./data_exports", exist_ok=True)
-	with open(f"data_exports/{login}.json", "w") as f:
+	with open(f"data_exports/{username}.json", "w") as f:
 		f.write(json.dumps(data, indent=2))
-	print(f"Export completed for {login}")
+	print(f"Export completed for {username}")
 
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
-		print(f"Usage: {sys.argv[1]} login")
+		print(f"Usage: {sys.argv[1]} username")
 		exit(1)
 	main(sys.argv[1])
