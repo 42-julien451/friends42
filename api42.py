@@ -1,9 +1,8 @@
 import time
 from typing import Optional
-from typing import Union
 import requests
-import math
 import config
+import globals
 
 
 class Api:
@@ -13,45 +12,25 @@ class Api:
 	rate_limit_last_time: float = time.time()
 	token: str = ""
 	expire_at: int = 0
-	intra: str = "https://api.intra.42.fr"
 
-	def __init__(self, key: str, secret: str):
-		self.key = key
-		self.secret = secret
+	def __init__(self):
 		self.rate_limit_last_time = time.time()
 		self.rate_limit_last_time_hours = time.time()
-		if not self.get_token():
-			print("Failed to get token")
-
-	def get_token(self) -> bool:
-		self.add_rate()
-		try:
-			r = requests.post(f"{self.intra}/oauth/token", data={
-				"grant_type": "client_credentials",
-				"client_id": self.key,
-				"client_secret": self.secret
-			})
-		except Exception as e:
-			return False
-		if r.status_code == 200:
-			self.token = r.json()["access_token"]
-			self.expire_at = r.json()["expires_in"] + time.time()
-			return True
-		else:
-			return False
 
 	def get_access_token(self, token: str, state: str, domain: str) -> str:
 		self.add_rate()
 		r = None
 		try:
-			r = requests.post(f"{self.intra}/oauth/token", data={
-				"grant_type": "authorization_code",
-				"client_id": self.key,
-				"client_secret": self.secret,
-				"code": token,
-				"state": state,
-				"redirect_uri": config.redirect_url.replace('{current_domain}', domain)
-			})
+			r = requests.post(
+				"https://auth.42paris.fr/realms/next/protocol/openid-connect/token",
+				data={
+					"grant_type": "authorization_code",
+					"client_id": config.ratatouille_client,
+					"client_secret": config.ratatouille_secret,
+					"code": token,
+					"redirect_uri": config.redirect_url.replace('{current_domain}', domain),
+				},
+			)
 		except Exception as e:
 			return ""
 		if r.status_code != 200:
@@ -61,7 +40,7 @@ class Api:
 	def get_token_info(self, token: str):
 		self.add_rate()
 		try:
-			user_info = requests.get(f"{self.intra}/oauth/token/info", headers={
+			user_info = requests.get(f"https://auth.42paris.fr/realms/next/protocol/openid-connect/userinfo", headers={
 				"Authorization": "Bearer " + token
 			})
 		except Exception as e:
@@ -70,14 +49,19 @@ class Api:
 			return None
 		return user_info.json()
 
-	def get_user_id_by_token(self, token: str, state: str, domain: str) -> int:
+	def get_user_id_by_token(self, token: str, state: str, domain: str):
 		final_token = self.get_access_token(token, state, domain)
 		if final_token == "":
 			return 0
 		user_info = self.get_token_info(final_token)
 		if not user_info:
 			return 0
-		return int(user_info["resource_owner_id"])
+		if user_info["account_type"] == "42v2":
+			return int(user_info["42v2_id"])
+		elif user_info["account_type"] == "42next" and user_info["id"]:
+			return int(user_info["id"])
+		elif user_info["account_type"] == "42next" and user_info["42v2_id"]:
+			return int(user_info["42v2_id"])
 
 	def add_rate(self):
 		if self.rate_limit_last_time == time.time() and self.rate_limit_sec == 2:
@@ -111,34 +95,9 @@ class Api:
 		else:
 			return {"error": r.text}, r.status_code, dict(r.headers)
 
-	def get_unknown_user(self, user_name: str) -> tuple[int, dict]:
-		data, status, header = self.get(f'/users/{user_name}')
-		if status == 200:
-			return 200, data
-		return status, data
 
-	def get_paged_locations(self, campus: int) -> tuple[int, list]:
-		ret = []
-		i = 1
-		page_numbers = 1
-		while i <= page_numbers:
-			# 1200 students max
-			if i > 12:
-				break
-			if i > 1:
-				time.sleep(1.1)
-			data, status, headers = self.get(f"/campus/{campus}/locations",
-			                                 ["page[size]=100", "sort=begin_at",
-			                                  "filter[active]=true", "filter[primary]=true",
-			                                  "range[begin_at]=2023-06-10T00:00:00.000Z,2500-01-01T00:00:00.000Z",
-			                                  f"page[number]={i}"])
-			if status == 200:
-				ret += data
-				i += 1
-				x_total = int(headers.get('x-total'))
-				x_per_page = int(headers.get('x-per-page'))
-				page_numbers = math.ceil(x_total / x_per_page)
-			else:
-				print("Could not get locations", status, data)
-				return status, ret
-		return 200, ret
+	def get_unknown_user(self, user_name: str):
+		data = globals.ratatouille(user_name)
+		if data == 200:
+			return 200, data
+		return 500, data
