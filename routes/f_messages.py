@@ -10,7 +10,7 @@ def anonymize_messages(messages, userid=-1):
 	for message in messages:
 		if message['anonymous'] == 1 and message['author'] != int(userid):
 			message['author'] = 0
-			message['author_login'] = 'Anonyme'
+			message['author_username'] = 'Anonyme'
 	return messages
 
 
@@ -18,10 +18,7 @@ def send_msg(author, dest, msg, db, ano=False):
 	db.insert_message(author['userid'], dest['id'], msg, 1 if 'anonymous' in request.form else 0)
 	notifs = db.has_notifications(dest['id'])
 	if notifs and notifs['enabled'] == 1:
-		sender = "de " + author['login']
-		if 'anonymous' in request.form:
-			sender = 'Anonyme'
-		send_raw_tg_dm(notifs['telegram_id'], f"📬 Nouveau message {sender} : {msg}")
+		sender = "de " + author['username']
 
 
 @app.route('/messages/')
@@ -30,7 +27,7 @@ def msg_default_route(userid):
 	with Db() as db:
 		messages = db.get_messages(userid['userid'])
 		db.mark_messages_as_read(userid['userid'])
-	return render_template('messages.html', me=userid['userid'],
+	return render_template('messages.html', user=userid,
 	                       messages=anonymize_messages(messages, userid['userid']), hide_msg=True)
 
 
@@ -58,7 +55,7 @@ def msg_send(userid):
 	if len(msg) > 2000 or len(msg) <= 1:
 		return 'Message is too long (or too short!)', 400
 	with Db() as db:
-		user = db.get_user_by_login(request.form['dest'])
+		user = db.get_user_by_username(request.form['dest'])
 		if not user:
 			return 'User not found', 404
 		send_msg(userid, user, msg, db, 'anonymous' in request.form)
@@ -88,10 +85,10 @@ def msg_send_as_org(userid):
 			return 'Invalid token', 400
 		users_list = set([user.strip() for user in form['dest'].split(',')])
 		for user in users_list:
-			user = db.get_user_by_login(user)
+			user = db.get_user_by_username(user)
 			if user:
 				msg_sent += 1
-				send_msg({"login": sp_user['sp_author'], "userid": -sp_user['sp_id']}, user, msg, db,
+				send_msg({"username": sp_user['sp_author'], "userid": -sp_user['sp_id']}, user, msg, db,
 				         'anonymous' in request.form)
 	return f"OK, {msg_sent} messages sent"
 
