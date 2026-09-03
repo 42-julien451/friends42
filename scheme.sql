@@ -1,13 +1,11 @@
 CREATE TABLE IF NOT EXISTS USERS
 (
-	id           INTEGER PRIMARY KEY,
+	id           VARCHAR(42) PRIMARY KEY,
 	name         VARCHAR(12) UNIQUE,
 	image        VARCHAR(100),
-	image_medium VARCHAR(100),
 	pool         VARCHAR(100),
 	lang         VARCHAR(3) DEFAULT 'fr',
-	active       TIMESTAMP  DEFAULT 0,
-	campus       INTEGER    DEFAULT 1
+	active       TIMESTAMP  DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS COOKIES
@@ -52,6 +50,19 @@ CREATE TABLE IF NOT EXISTS PROFILES
 	recit   TEXT        DEFAULT ''
 );
 
+CREATE TABLE IF NOT EXISTS MODULAR_ISSUE
+(
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    module     TEXT NOT NULL,
+    computer   TEXT NOT NULL,
+    data       TEXT,
+    text       TEXT,
+    icon_html  TEXT      DEFAULT '',
+    severity   INTEGER   DEFAULT 0,
+    latest     INTEGER   DEFAULT 1,
+    since      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS BAN_LIST
 (
 	id     INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +96,6 @@ CREATE TABLE IF NOT EXISTS MATES
 	project        TEXT,
 	created        DATETIME DEFAULT CURRENT_TIMESTAMP,
 	creator_id     INTEGER,
-	campus         INTEGER,
 	people         INTEGER,
 	deadline       TEXT     DEFAULT NULL,
 	progress       INTEGER  DEFAULT 0,
@@ -131,14 +141,12 @@ CREATE TABLE IF NOT EXISTS PERMISSIONS
 CREATE TABLE IF NOT EXISTS PISCINES
 (
 	id      INTEGER PRIMARY KEY,
-	campus  INTEGER DEFAULT 1,
 	cluster TEXT
 );
 
 CREATE TABLE IF NOT EXISTS SILENTS
 (
 	id      INTEGER PRIMARY KEY,
-	campus  INTEGER DEFAULT 1,
 	cluster TEXT
 );
 
@@ -162,18 +170,3 @@ CREATE TABLE IF NOT EXISTS SPECIAL_USERS
 	sp_author     TEXT,
 	sp_send_key   TEXT UNIQUE
 );
-
-/*
-CREATE TABLE IF NOT EXISTS PREFERENCES
-(
-	userid          INTEGER PRIMARY KEY,
-	show_piscine    INTEGER DEFAULT 0,
-	low_performance INTEGER DEFAULT 0,
-	telegram_uid    TEXT DEFAULT NULL,
-	send_notif      INTEGER DEFAULT 0,
-	theme           INTEGER DEFAULT 0,
-	lang 			VARCHAR DEFAULT 'fr'
-	privacy         INTEGER DEFAULT 0,
-	FOREIGN KEY (userid) REFERENCES USERS (id)
-);
-*/
