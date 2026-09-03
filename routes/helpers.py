@@ -78,7 +78,7 @@ def create_csrf():
     random = secrets.token_urlsafe(20)
     msg = timestamp + "," + random + ""
     signature = hmac.new(
-        (config.secret + g.session).encode('ascii'),
+        (config.csrf + g.session).encode('ascii'),
         msg=msg.encode('ascii'),
         digestmod=hashlib.sha256)
     return msg + ":" + signature.hexdigest()
