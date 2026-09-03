@@ -1,17 +1,18 @@
-from globals import *
 from routes.helpers import *
 from flask import Blueprint, render_template, send_from_directory, make_response, redirect
 import maps.maps as maps
 import arrow
+import module
+
 
 app = Blueprint('front', __name__, template_folder='templates', static_folder='static')
 
 
-@app.route('/profile/<login>')
+@app.route('/profile/<username>')
 @auth_required
-def profile(login, userid):
+def profile(username, userid):
 	with Db() as db:
-		user = db.get_user_profile(login, api)
+		user = db.get_user_profile(username, api)
 		if user is None:
 			return '', 404
 		is_friend = db.is_friend(userid['userid'], user['id']) is not False
@@ -37,8 +38,8 @@ def profile(login, userid):
 @auth_required
 def settings(userid):
 	db = Db("database.db")
-	login = db.get_user_by_id(userid['userid'])['name']
-	user = db.get_user_profile(login)
+	username = db.get_user_by_id(userid['userid'])['name']
+	user = db.get_user_profile(username)
 	notif = db.has_notifications(userid['userid'])
 	theme = db.get_theme(userid['userid'])
 	cookies = db.get_user_cookies(userid['userid'])
@@ -56,24 +57,21 @@ def settings(userid):
 def index(userid):
 	pos = standard_cluster(get_position(userid['userid']))
 	db = Db("database.db")
-	campus_id = db.get_user_by_id(userid['userid'])['campus']
-	if campus_id not in maps.available:
-		db.close()
-		return render_template('campus_refresh.html', campus_id=campus_id)
 	friends = db.get_friends(userid['userid'])
 	issues = db.get_issues()
 	me = db.get_user_profile_id(userid['userid'])
 	theme = db.get_theme(userid['userid'])
 	shadow_bans = db.get_shadow_bans(userid['userid'])
-	piscines = [x['cluster'] for x in db.get_piscines(userid['campus'])]
-	silents = [x['cluster'] for x in db.get_silents(userid['campus'])]
+	piscines = [x['cluster'] for x in db.get_piscines()]
+	silents = [x['cluster'] for x in db.get_silents()]
+	dead_details = db.get_mod_issues("%")
 	db.close()
-	campus_map = maps.available[campus_id].map
+	campus_map = maps.available[1].map
 	if pos and type(campus_map['exrypz'](pos)) == bool:
 		pos = campus_map['default']
 	else:
 		pos = campus_map['default'] if not pos else campus_map['exrypz'](pos)['etage']
-	cache_tab = get_cached_locations(campus_id)
+	cache_tab = get_cached_locations()
 	cluster_name = pos if request.args.get('cluster') is None else request.args.get('cluster')
 	if cluster_name not in campus_map['allowed']:
 		cluster_name = campus_map['default']
@@ -81,23 +79,23 @@ def index(userid):
 	issues_map = {}
 	# TODO: optimize this
 	for user in cache_tab:
-		user_id = user['user']['id']
+		user_id = user['id']
 		if user_id in shadow_bans:
 			continue
 		friend, close_friend = False, False
 		friend = user_id in [e['has'] for e in friends]
 		if friend:
 			close_friend = user_id in [e['has'] for e in friends if e['relation'] == 1]
-		location_map[user['host']] = {
+		location_map[user['location']] = {
 			**user,
 			"me": user_id == userid['userid'],
 			"friend": friend,
 			"close_friend": close_friend,
 			"pool": False
 		}
-		if me and 'pool' in me:
-			location_map[user['host']]['pool'] = f"{user['user']['pool_month']} {user['user']['pool_year']}" == me[
-				'pool']
+		# if me and 'pool' in me:
+		# 	pass
+		# 	location_map[user['location']]['pool'] = f"{user['user']['pool_month']} {user['user']['pool_year']}" == me['pool']
 	for issue in issues:
 		if issue['station'] not in issues_map:
 			issues_map[issue['station']] = {"count": 0}
@@ -108,13 +106,23 @@ def index(userid):
 		 "maximum_places": maps.places(campus_map['exrypz'], campus_map[cluster]),
 		 "users": maps.count_in_cluster(cluster, location_map),
 		 "dead_pc": maps.count_in_cluster(cluster, issues_map),
-		 "places": maps.available_seats(cluster, campus_map[cluster], campus_map['exrypz'], location_map, issues_map)}
+		 "places": maps.available_seats(cluster, campus_map[cluster], campus_map['exrypz'], location_map, issues_map),}
 		for cluster in campus_map['allowed']]
-	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
+	dead_map = {}
+	for detail in dead_details:
+		if detail['computer'] not in dead_map:
+			dead_map[detail['computer']] = []
+		if detail['severity'] >= module.States.WARNING:
+			if detail['computer'] not in issues_map:
+				issues_map[detail['computer']] = {"count": 1, "issue": detail['severity']}
+			else:
+				issues_map[detail['computer']]['count'] += 1
+				issues_map[detail['computer']]['issue'] = max(detail['severity'], issues_map[detail['computer']]['issue'])
+		dead_map[detail['computer']].append(detail)
+	return render_template('index.html', user=userid, map=campus_map[cluster_name], locations=location_map,
 	                       clusters=clusters_list, actual_cluster=cluster_name, issues_map=issues_map,
 	                       exrypz=campus_map['exrypz'], piscine=piscines, theme=theme, silent=silents,
-	                       focus=request.args.get('p'))
-
+	                       focus=request.args.get('p'), totalco=len(cache_tab), cototal=1250, dead_map=dead_map)
 
 @app.route('/friends/')
 @auth_required
@@ -138,7 +146,7 @@ def friends_route(userid):
 	friend_list = sorted(friend_list, key=lambda d: d['name'])
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['relation'] == 1 else 1)
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['position'] else 1)
-	return render_template('friends.html', friends=friend_list, theme=theme)
+	return render_template('friends.html', user=userid, friends=friend_list, theme=theme)
 
 
 @app.route('/search/<keyword>/<int:friends_only>')
