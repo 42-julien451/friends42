@@ -51,9 +51,10 @@ def auth():
 	db = Db("database.db")
 	add_id = db.get_user(user_id)
 	if add_id is None:
-		status, resp = api.get_unknown_user(user_id)
-		if status == 200:
-			create_users(db, [{'user': resp}])
+		status = ratatouille.getUserByIDOrUsername(user_id)
+		status["location"] = None
+		if status["id"]:
+			create_users(db, [status])
 		else:
 			return '', 500
 	cookie = db.create_cookie(user_id, request.headers.get('User-Agent'))
