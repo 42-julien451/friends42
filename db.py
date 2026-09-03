@@ -1,8 +1,10 @@
+from datetime import datetime
 import sqlite3
 import secrets
 import base64
 import json
-from routes.api_helpers import *
+import psycopg2
+import config
 
 
 def read_file(filename: str):
@@ -16,6 +18,16 @@ def dict_factory(cursor, row) -> dict:
 		d[col[0]] = row[idx]
 	return d
 
+class Psql:
+	def __init__(self):
+		try:
+			self.conn = psycopg2.connect(f"dbname='{config.psql_db}' user='{config.psql_user}' host='{config.psql_host}' password='{config.psql_pass}'")
+		except Exception as e:
+			print(f"Cannot connect to PSQL:\n{e}")
+	def get_crs(self):
+		with self.conn.cursor() as cursor:
+			cursor.execute("SELECT login,hostname FROM locations WHERE end_at is NULL;")
+			return cursor.fetchall()
 
 class Db:
 	cur: sqlite3.Cursor = None
@@ -54,32 +66,43 @@ class Db:
 	def create_table(self, sql_file: str):
 		self.cur.executescript(read_file(sql_file))
 
+	def find_piscine_date(self, cursus):
+		for c in cursus:
+			if "c-piscine" in c["program"]["id"] or "piscine-c-decloisonnee" in c["program"]["id"]:
+				start = datetime.fromisoformat(c['start_at'].replace("Z", "+00:00"))
+				end = datetime.fromisoformat(c['end_at'].replace("Z", "+00:00"))
+				month = start + (end - start) / 2
+				return month.strftime("%B"), month.strftime("%Y")
+		return "Error date", 42
+
 	# Users
-	def create_user(self, user_data: dict, campus=1):
+	def create_user(self, user_data: dict):
 		def god(db, field, userid: int):
 			"""get old data"""
 			return f"(SELECT {field} FROM {db} WHERE id = '{userid}')"
 
-		uid = int(user_data["id"])
-		active = "CURRENT_TIMESTAMP" if user_data["location"] else god('USERS', 'active', uid)
-		if not campus or type(campus) is not int:
-			campus = 1
+		active = "CURRENT_TIMESTAMP" if user_data["location"] else god('USERS', 'active', user_data["id"])
+		pass
+		if user_data["status"] == 'staff.campus':
+			month, year = "January", 4242
+		else:
+			month, year = self.find_piscine_date(user_data['program_session_participations'])
 		self.cur.execute(
-			'INSERT OR REPLACE INTO USERS(id, name, image, image_medium, pool, active, campus) '
-			f"VALUES(?, ?, ?, ?, ?, {active}, {campus})",
-			[uid, user_data["login"], user_data["image"]["link"], user_data["image"]["versions"]["medium"],
-			 f"{user_data['pool_month']} {user_data['pool_year']}"])
+			'INSERT OR REPLACE INTO USERS(id, name, image, pool, active) '
+			f"VALUES(?, ?, ?, ?, {active})",
+			[user_data["id"], user_data["username"], user_data["profile_picture_url"],
+			 f"{month} {year}"])
 
 	def get_user(self, user_id):
 		query = self.cur.execute("SELECT id FROM USERS WHERE name = ?", [user_id])
 		return query.fetchone()
 
 	def get_user_by_id(self, user_id: int):
-		query = self.cur.execute("SELECT name, campus, image_medium FROM USERS WHERE id = ?", [user_id])
+		query = self.cur.execute("SELECT name FROM USERS WHERE id = ?", [user_id])
 		return query.fetchone()
 
-	def get_user_by_login(self, login: str):
-		query = self.cur.execute("SELECT id, name, campus, image_medium FROM USERS WHERE name = ?", [login])
+	def get_user_by_username(self, username: str):
+		query = self.cur.execute("SELECT id, name FROM USERS WHERE name = ?", [username])
 		return query.fetchone()
 
 	def search(self, start: str):
@@ -300,25 +323,25 @@ class Db:
 		self.commit()
 		return True
 
-	def get_user_profile(self, login, api=None):
+	def get_user_profile(self, username, api=None):
 		query = self.cur.execute("SELECT * FROM USERS LEFT JOIN PROFILES ON PROFILES.userid = USERS.id WHERE name = ?",
-		                         [str(login)])
+		                         [str(username)])
 		ret = query.fetchone()
 		if api and ret is None:
-			ret_status, ret_data = api.get_unknown_user(login)
+			ret_status, ret_data = api.get_unknown_user(username)
 			if ret_status != 200:
 				return None
-			self.create_user(ret_data, find_correct_campus(ret_data))
-			return self.get_user_profile(login)
+			self.create_user(ret_data, 1)
+			return self.get_user_profile(username)
 		return ret
 
-	def get_user_profile_id(self, login):
+	def get_user_profile_id(self, username):
 		"""
-		:param login: Login 42 id
+		:param username: username 42 id
 		:return: SELECT * FROM USERS
 		"""
 		query = self.cur.execute(
-			"SELECT * FROM USERS LEFT JOIN PROFILES ON PROFILES.userid = USERS.id WHERE USERS.id = ?", [login])
+			"SELECT * FROM USERS LEFT JOIN PROFILES ON PROFILES.userid = USERS.id WHERE USERS.id = ?", [username])
 		return query.fetchone()
 
 	# Ban list
@@ -336,14 +359,13 @@ class Db:
 		req = self.cur.execute("SELECT * FROM MATES WHERE creator_id = ?", [who_id])
 		return req.fetchall()
 
-	def get_mates(self, project: str, campus: int):
-		req = self.cur.execute("SELECT * FROM MATES WHERE project = ? AND campus = ? ORDER BY created DESC",
-		                       [project, campus])
+	def get_mates(self, project: str):
+		req = self.cur.execute("SELECT * FROM MATES WHERE project = ? ORDER BY created DESC",
+		                       [project])
 		return req.fetchall()
 
-	def get_latest_mates(self, campus: int):
-		req = self.cur.execute("SELECT * FROM MATES WHERE campus = ? ORDER BY created DESC LIMIT 15",
-		                       [campus])
+	def get_latest_mates(self):
+		req = self.cur.execute("SELECT * FROM MATES ORDER BY created DESC LIMIT 15")
 		return req.fetchall()
 
 	def delete_mate(self, project_id):
@@ -365,8 +387,8 @@ class Db:
 			return 3
 
 		self.cur.execute(
-			"INSERT OR REPLACE INTO MATES(project, creator_id, campus, deadline, progress, quick_contacts, mates, description, contact, people) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			[project, creator, creator_details['campus'], deadline, progress, quick_contacts, mates, description,
+			"INSERT OR REPLACE INTO MATES(project, creator_id, deadline, progress, quick_contacts, mates, description, contact, people) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			[project, creator, deadline, progress, quick_contacts, mates, description,
 			 contact, people])
 		self.commit()
 		return 0
@@ -451,12 +473,12 @@ class Db:
 
 	def get_all_shadow_bans(self):
 		req = self.cur.execute(
-			"SELECT USERS.name as offender_login, SHADOW_BAN.id as ban_id, reason, SHADOW_BAN.user AS victim FROM SHADOW_BAN LEFT JOIN USERS ON USERS.id = SHADOW_BAN.offender")
+			"SELECT USERS.name as offender_username, SHADOW_BAN.id as ban_id, reason, SHADOW_BAN.user AS victim FROM SHADOW_BAN LEFT JOIN USERS ON USERS.id = SHADOW_BAN.offender")
 		return req.fetchall()
 
 	# Piscines
-	def insert_piscine(self, campus: int, cluster: str):
-		self.cur.execute("INSERT INTO PISCINES(campus, cluster) VALUES(?, ?)", [campus, cluster])
+	def insert_piscine(self, cluster: str):
+		self.cur.execute("INSERT INTO PISCINES(cluster) VALUES(?)", [cluster])
 		self.commit()
 
 	def remove_piscine(self, piscine: int):
@@ -467,17 +489,17 @@ class Db:
 		req = self.cur.execute("SELECT * FROM PISCINES")
 		return req.fetchall()
 
-	def get_piscines(self, campus: int):
-		req = self.cur.execute("SELECT * FROM PISCINES WHERE campus = ?", [campus])
+	def get_piscines(self):
+		req = self.cur.execute("SELECT * FROM PISCINES")
 		return req.fetchall()
 
-	def is_piscine(self, campus: int, cluster: str):
-		req = self.cur.execute("SELECT 1 FROM PISCINES WHERE campus = ? AND cluster LIKE ?", [campus, cluster])
+	def is_piscine(self, cluster: str):
+		req = self.cur.execute("SELECT 1 FROM PISCINES WHERE cluster LIKE ?", [cluster])
 		return True if req.fetchone() else False
 
 	# Silents clusters
-	def insert_silent(self, campus: int, cluster: str):
-		self.cur.execute("INSERT INTO SILENTS(campus, cluster) VALUES(?, ?)", [campus, cluster])
+	def insert_silent(self, cluster: str):
+		self.cur.execute("INSERT INTO SILENTS(cluster) VALUES (?)", [cluster])
 		self.commit()
 
 	def remove_silent(self, silent: int):
@@ -488,12 +510,12 @@ class Db:
 		req = self.cur.execute("SELECT * FROM SILENTS")
 		return req.fetchall()
 
-	def get_silents(self, campus: int):
-		req = self.cur.execute("SELECT * FROM SILENTS WHERE campus = ?", [campus])
+	def get_silents(self):
+		req = self.cur.execute("SELECT * FROM SILENTS")
 		return req.fetchall()
 
-	def is_silent(self, campus: int, cluster: str):
-		req = self.cur.execute("SELECT 1 FROM SILENTS WHERE campus = ? AND cluster LIKE ?", [campus, cluster])
+	def is_silent(self, cluster: str):
+		req = self.cur.execute("SELECT 1 FROM SILENTS WHERE cluster LIKE ?", [cluster])
 		return True if req.fetchone() else False
 
 	# Admin
@@ -519,7 +541,7 @@ class Db:
 	def get_messages(self, dest):
 		req = self.cur.execute(
 			"""
-			SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS_AUTHOR.name as author_login, USERS_DEST.name as dest_login, SPECIAL_USERS.sp_tag, SPECIAL_USERS.sp_tag_style, SPECIAL_USERS.sp_author FROM MESSAGES
+			SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS_AUTHOR.name as author_username, USERS_DEST.name as dest_username, SPECIAL_USERS.sp_tag, SPECIAL_USERS.sp_tag_style, SPECIAL_USERS.sp_author FROM MESSAGES
 			JOIN USERS AS USERS_DEST ON MESSAGES.dest = USERS_DEST.id
 			LEFT JOIN USERS AS USERS_AUTHOR ON MESSAGES.author = USERS_AUTHOR.id
 			LEFT JOIN SPECIAL_USERS ON (MESSAGES.author < 0 AND (-1 * MESSAGES.author) = SPECIAL_USERS.sp_id)
@@ -552,3 +574,27 @@ class Db:
 		self.cur.execute("UPDATE SPECIAL_USERS SET sp_tag = ?, sp_tag_style = ?, sp_author = ? WHERE sp_send_key = ?",
 		                 [sp_tag, sp_tag_style, sp_author, key])
 		self.commit()
+
+	def insert_issue(self, module, computer, text, severity, icon_html='', data=None, commit=True):
+		self.cur.execute("UPDATE MODULAR_ISSUE SET latest = 0 WHERE computer = ? AND module = ?",
+		                 [computer, module])
+		self.cur.execute(
+			"INSERT INTO MODULAR_ISSUE(module, computer, data, text, severity, icon_html) VALUES(?, ?, ?, ?, ?, ?)",
+			[module, computer, data, text, severity, icon_html])
+		if commit:
+			self.commit()
+
+	def get_mod_issues(self, computer):
+		req = self.cur.execute("SELECT * FROM MODULAR_ISSUE WHERE computer LIKE ? AND latest = 1", [computer])
+		return req.fetchall()
+
+	def get_mod_issues_specific(self, module, computer):
+		req = self.cur.execute("SELECT * FROM MODULAR_ISSUE WHERE computer LIKE ? AND module = ? ORDER BY id DESC LIMIT 5",
+		                       [computer, module])
+		return req.fetchall()
+
+	def remove_latest(self, module, computer, commit=True):
+		self.cur.execute("UPDATE MODULAR_ISSUE SET latest = 0 WHERE computer LIKE ? AND module LIKE ?",
+		                 [computer, module])
+		if commit:
+			self.commit()
