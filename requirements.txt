@@ -3,3 +3,5 @@ Flask
 requests
 arrow
 sentry_sdk
+gunicorn
+psycopg2-binary
