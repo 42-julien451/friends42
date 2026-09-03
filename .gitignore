@@ -65,6 +65,7 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+dump.rdb
 
 # Flask stuff:
 instance/
@@ -174,3 +175,4 @@ wip_*
 session.txt
 projects*.json
 config.py
+test.py
