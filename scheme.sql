@@ -81,23 +81,6 @@ CREATE TABLE IF NOT EXISTS THEME
 	FOREIGN KEY (userid) REFERENCES USERS (id)
 );
 
-CREATE TABLE IF NOT EXISTS MATES
-(
-	id             INTEGER PRIMARY KEY AUTOINCREMENT,
-	project        TEXT,
-	created        DATETIME DEFAULT CURRENT_TIMESTAMP,
-	creator_id     INTEGER,
-	people         INTEGER,
-	deadline       TEXT     DEFAULT NULL,
-	progress       INTEGER  DEFAULT 0,
-	quick_contacts TEXT,
-	mates          TEXT,
-	description    TEXT,
-	contact        TEXT,
-	UNIQUE (project, creator_id),
-	FOREIGN KEY (creator_id) REFERENCES USERS (id)
-);
-
 CREATE TABLE IF NOT EXISTS SHADOW_BAN
 (
 	id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -139,13 +122,4 @@ CREATE TABLE IF NOT EXISTS MESSAGES
 	read      INTEGER   DEFAULT 0,
 	created   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (author) REFERENCES USERS (id)
-);
-
-CREATE TABLE IF NOT EXISTS SPECIAL_USERS
-(
-	sp_id         INTEGER PRIMARY KEY AUTOINCREMENT,
-	sp_tag        TEXT,
-	sp_tag_style  TEXT,
-	sp_author     TEXT,
-	sp_send_key   TEXT UNIQUE
 );

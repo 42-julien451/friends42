@@ -306,104 +306,6 @@ class Db:
 		query = self.cur.execute('SELECT 1 FROM BAN_lIST WHERE userid = ?', [user_id])
 		return query.fetchone() is not None
 
-	# Mates
-
-	def get_mate_by_id(self, mate_id):
-		req = self.cur.execute("SELECT * FROM MATES WHERE id = ?", [mate_id])
-		return req.fetchone()
-
-	def get_mates_by_user(self, who_id):
-		req = self.cur.execute("SELECT * FROM MATES WHERE creator_id = ?", [who_id])
-		return req.fetchall()
-
-	def get_mates(self, project: str):
-		req = self.cur.execute("SELECT * FROM MATES WHERE project = ? ORDER BY created DESC",
-		                       [project])
-		return req.fetchall()
-
-	def get_latest_mates(self):
-		req = self.cur.execute("SELECT * FROM MATES ORDER BY created DESC LIMIT 15")
-		return req.fetchall()
-
-	def delete_mate(self, project_id):
-		self.cur.execute("DELETE FROM MATES WHERE id = ?", [project_id])
-		self.commit()
-
-	def new_mate(self, creator: int, project: str, deadline: str, progress: int, quick_contacts: str, mates: str,
-	             description: str, contact: str, people: int) -> int:
-		if len(quick_contacts) > 35 or len(mates) > 60 or len(description) > 1000 or len(contact) > 500 or len(
-				deadline) > 10:
-			return 1
-		if creator <= 0 or progress > 100 or progress < 0:
-			return 2
-		if people > 8 or people < 2:
-			return 4
-
-		creator_details = self.get_user_by_id(creator)
-		if not creator_details:
-			return 3
-
-		self.cur.execute(
-			"INSERT OR REPLACE INTO MATES(project, creator_id, deadline, progress, quick_contacts, mates, description, contact, people) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			[project, creator, deadline, progress, quick_contacts, mates, description,
-			 contact, people])
-		self.commit()
-		return 0
-
-	# Projects
-
-	def get_project_list(self, redis):
-		rds_ret = redis.get('db_project_list')
-		if rds_ret:
-			return json.loads(rds_ret)
-		req = self.cur.execute("SELECT * FROM PROJECTS")
-		data = req.fetchall()
-		redis.set('db_project_list', json.dumps(data), ex=3600)
-		return data
-
-	def get_group_projects_list(self, redis):
-		rds_ret = redis.get('db_project_list_group')
-		if rds_ret:
-			return json.loads(rds_ret)
-		req = self.cur.execute("SELECT * FROM PROJECTS WHERE solo = 0")
-		data = req.fetchall()
-		redis.set('db_project_list_group', json.dumps(data), ex=3600)
-		return data
-
-	def get_xp_projects_list(self, redis):
-		rds_ret = redis.get('db_project_list_xp')
-		if rds_ret:
-			return json.loads(rds_ret)
-		req = self.cur.execute("SELECT * FROM PROJECTS WHERE experience != 0")
-		data = req.fetchall()
-		redis.set('db_project_list_xp', json.dumps(data), ex=3600)
-		return data
-
-	def get_project(self, project_slug, redis):
-		rds_ret = redis.get('db_project_name_' + project_slug)
-		if rds_ret:
-			return json.loads(rds_ret)
-		req = self.cur.execute("SELECT * FROM PROJECTS WHERE slug = ?", [project_slug])
-		data = req.fetchone()
-		redis.set('db_project_name_' + project_slug, json.dumps(data), ex=3600)
-		return data
-
-	def is_project_a_thing(self, project_slug) -> bool:
-		req = self.cur.execute("SELECT 1 FROM PROJECTS WHERE slug = ?", [project_slug])
-		return True if req.fetchone() is not None else False
-
-	def search_project_solo(self, keyword: str, solo: False) -> list:
-		keyword = f"%{keyword}%"
-		req = self.cur.execute("SELECT * FROM PROJECTS WHERE (name LIKE ? OR slug LIKE ?) AND solo = ?",
-		                       [keyword, keyword, solo])
-		return req.fetchall()
-
-	def search_project(self, keyword: str) -> list:
-		keyword = f"%{keyword}%"
-		req = self.cur.execute("SELECT * FROM PROJECTS WHERE name LIKE ? OR slug LIKE ?",
-		                       [keyword, keyword])
-		return req.fetchall()
-
 	# Update process
 	def raw_query(self, query, args):
 		return self.cur.execute(query, args)
@@ -518,19 +420,6 @@ class Db:
 	def number_of_unread_msg(self, dest):
 		req = self.cur.execute("SELECT COUNT(1) as c FROM MESSAGES WHERE dest = ? AND read = 0", [dest])
 		return req.fetchone()['c']
-
-	def get_special_user_by_key(self, key: str):
-		req = self.cur.execute("SELECT * FROM SPECIAL_USERS WHERE sp_send_key = ?", [key])
-		return req.fetchone()
-
-	def get_special_user_by_id(self, sp_id: int):
-		req = self.cur.execute("SELECT * FROM SPECIAL_USERS WHERE sp_id = ?", [sp_id])
-		return req.fetchone()
-
-	def update_special_user(self, key: str, sp_tag: str, sp_tag_style: str, sp_author: str):
-		self.cur.execute("UPDATE SPECIAL_USERS SET sp_tag = ?, sp_tag_style = ?, sp_author = ? WHERE sp_send_key = ?",
-		                 [sp_tag, sp_tag_style, sp_author, key])
-		self.commit()
 
 	def insert_issue(self, module, computer, text, severity, icon_html='', data=None, commit=True):
 		self.cur.execute("UPDATE MODULAR_ISSUE SET latest = 0 WHERE computer = ? AND module = ?",
