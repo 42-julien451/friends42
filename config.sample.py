@@ -1,6 +1,9 @@
 # Update key
 update_key = ""
 
+# CSRF random key
+csrf = ""
+
 #Node exporter conf
 node_user = ''
 node_pwd = ''
