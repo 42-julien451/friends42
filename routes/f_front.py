@@ -62,7 +62,7 @@ def index(userid):
 	silents = [x['cluster'] for x in db.get_silents()]
 	dead_details = db.get_mod_issues("%")
 	db.close()
-	campus_map = maps.available[1].map
+	campus_map = maps.map_paris.map
 	if pos and type(campus_map['exrypz'](pos)) == bool:
 		pos = campus_map['default']
 	else:

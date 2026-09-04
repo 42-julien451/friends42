@@ -38,6 +38,3 @@ def available_seats(cluster: str, _map: list, exrypz, locations_map: dict, error
 
 
 paris = map_paris.map
-available = {
-	1: map_paris
-}
