@@ -27,9 +27,7 @@ def main(username: str):
 		data['friends'] = db.get_friends(user_id)
 		data['cookies'] = db.get_user_all_cookies(user_id)
 		data['dead_pc'] = db.get_issues_by_user(user_id)
-		data['telegram'] = db.has_notifications(user_id)
 		data['theme'] = db.get_theme(user_id)
-		data['mates'] = db.get_mates_by_user(user_id)
 		data['messages'] = anonymise_messages(db.get_raw_messages(user_id))
 	os.makedirs("./data_exports", exist_ok=True)
 	with open(f"data_exports/{username}.json", "w") as f:
