@@ -165,7 +165,7 @@ def locs():
         u = ratatouille.getUserByIDOrUsername(d[0])
         u["location"] = d[1].replace(".paris.42.school", "")
         users.append(u)
-        # time.sleep(0.1)
+        time.sleep(0.2)
     with Db("database.db") as db:
         create_users(db, users)
     alluser_json = [a for a in users]
