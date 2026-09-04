@@ -40,15 +40,11 @@ def settings(userid):
 	db = Db("database.db")
 	username = db.get_user_by_id(userid['userid'])['name']
 	user = db.get_user_profile(username)
-	notif = db.has_notifications(userid['userid'])
 	theme = db.get_theme(userid['userid'])
 	cookies = db.get_user_cookies(userid['userid'])
-	campus_id = db.get_user_by_id(userid['userid'])['campus']
 	db.close()
-	kiosk_buildings = {}
-	if campus_id in maps.available:
-		kiosk_buildings = maps.available[campus_id].map['buildings']
-	return render_template('settings.html', user=user, notif=notif, theme=theme, cookies=cookies,
+	kiosk_buildings = maps.available[1].map['buildings']
+	return render_template('settings.html', user=user, theme=theme, cookies=cookies,
 	                       kiosk_buildings=kiosk_buildings)
 
 

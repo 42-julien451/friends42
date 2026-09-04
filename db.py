@@ -400,10 +400,9 @@ class Db:
 	def get_messages(self, dest):
 		req = self.cur.execute(
 			"""
-			SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS_AUTHOR.name as author_username, USERS_DEST.name as dest_username, SPECIAL_USERS.sp_tag, SPECIAL_USERS.sp_tag_style, SPECIAL_USERS.sp_author FROM MESSAGES
+			SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS_AUTHOR.name as author_username, USERS_DEST.name as dest_username FROM MESSAGES
 			JOIN USERS AS USERS_DEST ON MESSAGES.dest = USERS_DEST.id
 			LEFT JOIN USERS AS USERS_AUTHOR ON MESSAGES.author = USERS_AUTHOR.id
-			LEFT JOIN SPECIAL_USERS ON (MESSAGES.author < 0 AND (-1 * MESSAGES.author) = SPECIAL_USERS.sp_id)
 			WHERE dest = ? OR author = ?
 			ORDER BY created DESC""",
 			[dest, dest])
