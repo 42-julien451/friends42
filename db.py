@@ -110,49 +110,6 @@ class Db:
 		resp = req.fetchall()
 		return resp
 
-	# Notifications
-	def enable_notification(self, who: int, tg_id: int, message=None):
-		if who is None or tg_id is None:
-			return False
-		self.cur.execute(
-			"INSERT OR REPLACE INTO NOTIFICATIONS_TELEGRAM(userid, telegram_id, message, enabled) VALUES (?, ?, ?, ?)",
-			[who, tg_id, message, 1])
-		self.commit()
-		return True
-
-	def status_notification(self, who, status: int):
-		if who is None or status > 1 or status < 0:
-			return False
-		self.cur.execute("UPDATE NOTIFICATIONS_TELEGRAM SET enabled = ? WHERE userid = ?", [status, who])
-		self.commit()
-		return True
-
-	def message_notification(self, who, msg):
-		if len(msg) > 50:
-			return False
-		if not msg or len(msg) == 0 or msg == 'NONONON':
-			msg = None
-		self.cur.execute("UPDATE NOTIFICATIONS_TELEGRAM SET message = ? WHERE userid = ?", [msg, who])
-		self.commit()
-		return True
-
-	def unlink_notification(self, who):
-		if who is None:
-			return False
-		self.cur.execute("DELETE FROM NOTIFICATIONS_TELEGRAM WHERE userid = ?", [who])
-		self.commit()
-		return True
-
-	def has_notifications(self, who: int):
-		if who is None:
-			return False
-		req = self.cur.execute(
-			"SELECT telegram_id, message, enabled FROM NOTIFICATIONS_TELEGRAM WHERE userid = ?", [who])
-		res = req.fetchone()
-		if res is None:
-			return False
-		return res
-
 	# Theme
 	def update_theme(self, who: int, css: str, js: str, enabled: int):
 		if who is None or enabled > 1 or enabled < 0:
