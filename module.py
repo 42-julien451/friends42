@@ -1,5 +1,4 @@
 import functools
-import config
 from db import Db
 from dataclasses import dataclass
 import importlib
